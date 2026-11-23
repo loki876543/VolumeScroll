@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.yeapguy.volumescroll"
-        minSdk = 29
+        minSdk = 28
         targetSdk = 36
         versionCode = 3
         versionName = "1.0.2"
