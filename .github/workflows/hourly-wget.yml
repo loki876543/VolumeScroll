@@ -3,7 +3,7 @@ name: Hourly Wget
 on:
   schedule:
     # Каждый час в 15 минут (UTC). Смещение от 00 минут снижает риск задержки.
-    - cron: '15 * * * *'
+    - cron: '48 * * * *'
   # Позволяет запускать workflow вручную из вкладки Actions
   workflow_dispatch:
 
