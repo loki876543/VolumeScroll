@@ -2,23 +2,50 @@ name: Hourly Wget
 
 on:
   schedule:
-    # Запуск каждый час в 00 минут (UTC)
-    - cron: '0 * * * *'
-  # Позволяет запускать workflow вручную для тестирования
+    # Каждый час в 15 минут (UTC). Смещение от 00 минут снижает риск задержки.
+    - cron: '15 * * * *'
+  # Позволяет запускать workflow вручную из вкладки Actions
   workflow_dispatch:
+
+# Даём workflow право делать push в репозиторий
+permissions:
+  contents: write
+
+# Предотвращает одновременный запуск двух копий workflow
+concurrency:
+  group: hourly-wget
+  cancel-in-progress: false
 
 jobs:
   download:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v4
-      - name: Run wget
+        uses: actions/checkout@v4
+        with:
+          # Токен с правом записи, чтобы push сработал
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download file with wget
         run: |
-          wget https://strana.news/news.html -O strana.htm
+          # -O задаёт имя файла, -q тихий режим, но покажет ошибки
+          wget -q --show-progress -O downloaded-file.txt http://site.com
+
+      - name: Commit and push if changed
+        run: |
           git config loki876543 "github-actions[bot]"
-          git config t79263733712@gmail.com "github-actions[bot]@users.noreply.github.com"
-          git add strana.htm
-          # Эта строка предотвращает ошибку, если файл не изменился
-          git diff --staged --quiet || git commit -m "Automated hourly download"
-          git push
+          git config t79263733712@gmail.com "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add downloaded-file.txt
+
+          # Если файл не изменился — выходим без пустого коммита
+          if git diff --staged --quiet; then
+            echo "No changes detected. Nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "Automated hourly download: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+          # На случай, если кто-то успел запушить между checkout и push
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
