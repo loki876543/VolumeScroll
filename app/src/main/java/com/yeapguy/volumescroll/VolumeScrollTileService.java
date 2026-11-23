@@ -42,9 +42,11 @@ public class VolumeScrollTileService extends TileService {
         tile.setState(enabled ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
         tile.setIcon(Icon.createWithResource(this, R.drawable.ic_qs_tile));
         tile.setLabel(getString(R.string.quick_tile_label));
-        tile.setSubtitle(getString(enabled
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            tile.setSubtitle(getString(enabled
                 ? R.string.quick_tile_state_on
                 : R.string.quick_tile_state_off));
+        }
         tile.updateTile();
     }
 }
