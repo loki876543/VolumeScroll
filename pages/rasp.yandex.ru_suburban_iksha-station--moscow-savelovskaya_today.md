@@ -4,7 +4,7 @@
 
 # Подтвердите, что запросы отправляли вы, а не робот
 
-Нам очень жаль, но запросы с вашего устройства похожи на автоматические. [Почему это могло произойти?](https://yandex.ru/support/smart-captcha/problems.html?form-unique_key=9816422163488572735&form-fb-hint=2.98.2ab952ea79a679a58c739f426ade0ab6671e33c2cfe03f9121c0d3cc9da00518fc5cbd9dd5f7dc93550f27140b7d3e57efb27379d486f6cf4d132f86)
+Нам очень жаль, но запросы с вашего устройства похожи на автоматические. [Почему это могло произойти?](https://yandex.ru/support/smart-captcha/problems.html?form-unique_key=9816463030974882039&form-fb-hint=2.98.74b3d91a7171da2dea94e1e581873e91aae2530b73b5ed40dc4b364de8e77ba361bc2d97d17e1cecfd97be41d5b1e4cc5daf3a73269246b8529bd98e)
 
 У вас отключено исполнение JavaScript. По нажатию вы будете направлены на дополнительную проверку. [Как включить JavaScript?](https://yandex.ru/support/common/browsers-settings/browsers-java-js-settings.html)
 
@@ -12,10 +12,10 @@
 
 [Yandex SmartCaptcha](https://yandex.cloud/ru/services/smartcaptcha?utm_source=captcha&utm_medium=chbx&utm_campaign=security)
 
-Если у вас возникли проблемы, пожалуйста, воспользуйтесь [формой обратной связи](https://yandex.ru/support/smart-captcha/problems.html?form-unique_key=9816422163488572735&form-fb-hint=2.98.2ab952ea79a679a58c739f426ade0ab6671e33c2cfe03f9121c0d3cc9da00518fc5cbd9dd5f7dc93550f27140b7d3e57efb27379d486f6cf4d132f86)
+Если у вас возникли проблемы, пожалуйста, воспользуйтесь [формой обратной связи](https://yandex.ru/support/smart-captcha/problems.html?form-unique_key=9816463030974882039&form-fb-hint=2.98.74b3d91a7171da2dea94e1e581873e91aae2530b73b5ed40dc4b364de8e77ba361bc2d97d17e1cecfd97be41d5b1e4cc5daf3a73269246b8529bd98e)
 
-9816422163488572735:1795543531
+9816463030974882039:1795544140
 
 ![](https://mc.yandex.ru/watch/10630330?ut=noindex)
 
-![](https://adfstat.yandex.ru/captcha?req_id=&unique_key=9816422163488572735)
+![](https://adfstat.yandex.ru/captcha?req_id=&unique_key=9816463030974882039)
