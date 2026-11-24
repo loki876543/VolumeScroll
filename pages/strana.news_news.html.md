@@ -1,3 +1,7 @@
+сегодня, 19:40 
+
+[ В Украине налоговики принудительно закрывают ФЛП и доначисляют налоги ](/news/515716-hosnalohovaja-sluzhba-ukrainy-massovo-prinuditelno-zakryvaet-flp.html)
+
 сегодня, 19:23 
 
 [ Ливийское правительство в Триполи отрицает причастность к атаке Украины на корабли РФ у берегов Бенгази ](/news/515711-pravitelstvo-livii-v-tripoli-oproverhlo-prichastnost-k-atakam-na-rossijskie-suda.html)
@@ -81,10 +85,6 @@
 сегодня, 10:35 
 
 [ Во время атаки на Украину российский дрон залетел в Польшу. В Варшаве объяснили, почему не сбили БпЛА ](/news/515681-pochemu-polsha-ne-sbila-rossijskij-shakhed.html)
-
-сегодня, 10:00 
-
-[ Украинские знаменитости массово покидают Киев из-за обстрелов и отключений света ](/news/515676-iz-za-obstrelov-i-otkljuchenij-sveta-ukrainskie-znamenitosti-uezzhajut-iz-kieva.html)
 
   * 24 ноября 2026
   * [23 ноября 2026 »](/news/day=2026-11-23.html)
