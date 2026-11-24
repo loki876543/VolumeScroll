@@ -5,16 +5,16 @@ https://strana.news/news.html |Архив материалов|Архив мат
 https://www.gismeteo.ru/weather-moscow-4368/
 https://blogbankir.ru/
 #https://www.gazeta.ru/news/
-https://lenta.ru/parts/news |Все новости|Показать еще|
-https://lenta.ru/parts/news/2 |Все новости|Показать еще|
-https://lenta.ru/parts/news/3 |Все новости|Показать еще|
-https://lenta.ru/parts/news/4 |Все новости|Показать еще|
-https://lenta.ru/parts/news/5 |Все новости|Показать еще|
 https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
 https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
 https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
 https://t.rasp.yandex.ru/suburban/degunino--lobnja/today 
 https://t.rasp.yandex.ru/suburban/lobnja--iksha/today 
+https://lenta.ru/parts/news |Все новости|Показать еще|
+https://lenta.ru/parts/news/2 |Все новости|Показать еще|
+https://lenta.ru/parts/news/3 |Все новости|Показать еще|
+https://lenta.ru/parts/news/4 |Все новости|Показать еще|
+https://lenta.ru/parts/news/5 |Все новости|Показать еще|
 https://yandex.ru/chat/#/chats/1%2F0%2Fb5135f88-81e4-45c1-ab91-8bd45b6cd37e
 
 
