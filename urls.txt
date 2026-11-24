@@ -2,11 +2,11 @@ https://www.accuweather.com/en/ru/moscow/294021/10-day-weather-forecast/294021
 #?page=%7Bpage%7D&lang=en-us&partner=web_mozilla_adc
 https://strana.news/news.html |Архив материалов|Архив материалов
 https://blogbankir.ru/
-https://www.tutu.ru/rasp.php?st1=30404&st2=20000 |###| 
-https://www.tutu.ru/rasp.php?st1=20000&st2=30404 |Сегодня|### 
+https://www.tutu.ru/rasp.php?st1=30404&st2=20000 |Отправление
+https://www.tutu.ru/rasp.php?st1=20000&st2=30404 |Сегодня|Билеты
 https://www.tutu.ru/rasp.php?st1=28704&st2=30404 |Сегодня 
-https://www.tutu.ru/rasp.php?st1=28904&st2=30404 |Отправление|### 
-https://lenta.ru/parts/news |###|/parts/news
+https://www.tutu.ru/rasp.php?st1=28904&st2=30404 |Отправление|Билеты
+https://lenta.ru/parts/news |Все новости|Показать еще
 https://lenta.ru/parts/news/2 |Все новости|Показать еще
 https://lenta.ru/parts/news/3 |Все новости|Показать еще
 https://lenta.ru/parts/news/4 |Все новости|Показать еще
