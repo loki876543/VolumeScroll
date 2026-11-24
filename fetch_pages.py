@@ -111,8 +111,8 @@ def parse_line(line: str):
 def to_text(html_fragment: str) -> str:
     """Конвертирует HTML-фрагмент в Markdown-подобный текст через html2text."""
     converter = html2text.HTML2Text()
-    converter.ignore_links = False
-    converter.ignore_images = False
+    converter.ignore_links = True
+    converter.ignore_images = True
     converter.body_width = 0  # не переносить строки
     return converter.handle(html_fragment).strip() + "\n"
 
