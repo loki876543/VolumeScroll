@@ -1,21 +1,25 @@
 https://strana.news/news.html |Архив материалов|Архив материалов
-#https://news.ycombinator.com/newest
-#https://habr.com/ru/articles |Закрыть|НазадСюда
-#https://habr.com/ru/articles/page2 |Закрыть|НазадСюда
-https://www.gismeteo.ru/weather-moscow-4368/
 https://blogbankir.ru/
-#https://www.gazeta.ru/news/
-https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
-https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
-https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
-https://t.rasp.yandex.ru/suburban/degunino--lobnja/today 
-https://t.rasp.yandex.ru/suburban/lobnja--iksha/today 
+https://www.tutu.ru/rasp.php?st1=30404&st2=20000
+https://www.tutu.ru/rasp.php?st1=20000&st2=30404
+https://www.tutu.ru/rasp.php?st1=28704&st2=30404
+https://www.tutu.ru/rasp.php?st1=28904&st2=30404
 https://lenta.ru/parts/news |Все новости|Показать еще|
 https://lenta.ru/parts/news/2 |Все новости|Показать еще|
 https://lenta.ru/parts/news/3 |Все новости|Показать еще|
 https://lenta.ru/parts/news/4 |Все новости|Показать еще|
 https://lenta.ru/parts/news/5 |Все новости|Показать еще|
-https://yandex.ru/chat/#/chats/1%2F0%2Fb5135f88-81e4-45c1-ab91-8bd45b6cd37e
+https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
+https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
+https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
+https://t.rasp.yandex.ru/suburban/degunino--lobnja/today 
+https://t.rasp.yandex.ru/suburban/lobnja--iksha/today 
+#https://yandex.ru/chat/#/chats/1%2F0%2Fb5135f88-81e4-45c1-ab91-8bd45b6cd37e
+#https://news.ycombinator.com/newest
+#https://habr.com/ru/articles |Закрыть|НазадСюда
+#https://habr.com/ru/articles/page2 |Закрыть|НазадСюда
+#https://www.gismeteo.ru/weather-moscow-4368/
+#https://www.gazeta.ru/news/
 
 
 # Формат файла:
