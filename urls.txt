@@ -4,13 +4,13 @@ https://www.tutu.ru/rasp.php?st1=30404&st2=20000 |Отправление и пр
 https://www.tutu.ru/rasp.php?st1=20000&st2=30404 |Отправление и прибытие по местному времени станций|Билеты в приложении
 https://www.tutu.ru/rasp.php?st1=28704&st2=30404 |Отправление и прибытие по местному времени станций|Билеты в приложении
 https://www.tutu.ru/rasp.php?st1=28904&st2=30404 |Отправление и прибытие по местному времени станций|Билеты в приложении
-https://lenta.ru/parts/news |Все новости|Показать еще|
-https://lenta.ru/parts/news/2 |Все новости|Показать еще|
-https://lenta.ru/parts/news/3 |Все новости|Показать еще|
-https://lenta.ru/parts/news/4 |Все новости|Показать еще|
-https://lenta.ru/parts/news/5 |Все новости|Показать еще|
-https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
-https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
+https://lenta.ru/parts/news |###|/parts/news
+https://lenta.ru/parts/news/2 |Все новости|Показать еще
+https://lenta.ru/parts/news/3 |Все новости|Показать еще
+https://lenta.ru/parts/news/4 |Все новости|Показать еще
+https://lenta.ru/parts/news/5 |Все новости|Показать еще
+#https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
+#https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
 https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
 https://t.rasp.yandex.ru/suburban/degunino--lobnja/today 
 https://t.rasp.yandex.ru/suburban/lobnja--iksha/today 
