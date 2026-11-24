@@ -1,5 +1,11 @@
 https://strana.news/news.html |Архив материалов|Архив материалов
 https://news.ycombinator.com/newest
+https://www.gazeta.ru/news/
+https://lenta.ru/parts/news/
+https://lenta.ru/parts/news/2/
+https://lenta.ru/parts/news/3/
+https://lenta.ru/parts/news/4/
+https://lenta.ru/parts/news/5/
 
 # Формат файла:
 # - Строки, начинающиеся с '#', и пустые строки пропускаются.
