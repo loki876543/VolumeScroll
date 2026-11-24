@@ -1,3 +1,15 @@
+сегодня, 19:23 
+
+[ Ливийское правительство в Триполи отрицает причастность к атаке Украины на корабли РФ у берегов Бенгази ](/news/515711-pravitelstvo-livii-v-tripoli-oproverhlo-prichastnost-k-atakam-na-rossijskie-suda.html)
+
+сегодня, 18:57 
+
+[ Украинских ФЛП хотят обязать платить НДС при обороте свыше €85 тысяч с 2028 года ](/news/515708-minfin-predlahaet-objazat-flp-platit-nds-pri-oborote-svyshe-85-tys-evro-s-2028-hoda.html)
+
+сегодня, 18:53 
+
+[ "Закроется половина". В Киеве сворачивается ресторанный бизнес, а помещения распродают. Что происходит ](/news/515694-pochemu-zakryvajutsja-kafe-i-restorany-kieva.html)
+
 сегодня, 18:41 
 
 [ В РФ объявили в розыск основателя "Ляписа Трубецкого", заочно приговоренного в Беларуси к четырем годам тюрьмы ](/news/515706-lider-hruppy-ljapis-trubetskoj-popal-v-rozysk-mvd-rossii-.html)
@@ -73,18 +85,6 @@
 сегодня, 10:00 
 
 [ Украинские знаменитости массово покидают Киев из-за обстрелов и отключений света ](/news/515676-iz-za-obstrelov-i-otkljuchenij-sveta-ukrainskie-znamenitosti-uezzhajut-iz-kieva.html)
-
-сегодня, 09:25 
-
-[ Перезагрузка отношений России и Европы. Кушнер назвал главную цель переговоров об Украине ](/news/515675-kushner-rasskazal-o-hlavnoj-tseli-perehovorov-ob-ukraine.html)
-
-сегодня, 08:50 
-
-[ Албания отрицает причастность к атакам украинских дронов на российские суда в Ливии ](/news/515674-albanija-otritsaet-prichastnost-k-udaram-ukrainy-po-sudam-rf-v-livii.html)
-
-сегодня, 08:15 
-
-[ 1735-й день войны в Украине. Что происходит 24 ноября. Обновляется ____](/news/515668-vojna-v-ukraine-24-nojabrja-2026-hoda-novosti-onlajn.html)
 
   * 24 ноября 2026
   * [23 ноября 2026 »](/news/day=2026-11-23.html)
