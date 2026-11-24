@@ -1,15 +1,15 @@
 https://strana.news/news.html |Архив материалов|Архив материалов
-https://news.ycombinator.com/newest
-https://habr.com/ru/articles/
-https://habr.com/ru/articles/page2/
+#https://news.ycombinator.com/newest
+#https://habr.com/ru/articles |Закрыть|НазадСюда
+#https://habr.com/ru/articles/page2 |Закрыть|НазадСюда
 https://www.gismeteo.ru/weather-moscow-4368/
 https://blogbankir.ru/
-https://www.gazeta.ru/news/
-https://lenta.ru/parts/news/
-https://lenta.ru/parts/news/2/
-https://lenta.ru/parts/news/3/
-https://lenta.ru/parts/news/4/
-https://lenta.ru/parts/news/5/
+#https://www.gazeta.ru/news/
+https://lenta.ru/parts/news |Все новости|Показать еще|
+https://lenta.ru/parts/news/2 |Все новости|Показать еще|
+https://lenta.ru/parts/news/3 |Все новости|Показать еще|
+https://lenta.ru/parts/news/4 |Все новости|Показать еще|
+https://lenta.ru/parts/news/5 |Все новости|Показать еще|
 https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
 https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
 https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
