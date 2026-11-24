@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
-URL_FILE = Path("url.txt")
+URL_FILE = Path("urls.txt")
 OUT_DIR = Path("pages")
 INDEX_FILE = Path("strana.htm")
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) VolumeScroll-fetch/1.0"
