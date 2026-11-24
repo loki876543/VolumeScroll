@@ -10,6 +10,8 @@ https://lenta.ru/parts/news/2/
 https://lenta.ru/parts/news/3/
 https://lenta.ru/parts/news/4/
 https://lenta.ru/parts/news/5/
+https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
+https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
 
 # Формат файла:
 # - Строки, начинающиеся с '#', и пустые строки пропускаются.
