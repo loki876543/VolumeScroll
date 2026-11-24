@@ -12,6 +12,11 @@ https://lenta.ru/parts/news/4/
 https://lenta.ru/parts/news/5/
 https://rasp.yandex.ru/suburban/iksha-station--moscow-savelovskaya/today
 https://rasp.yandex.ru/suburban/moscow-savelovskaya--iksha-station/today
+https://t.rasp.yandex.ru/suburban/timiryazevskaya--lobnja/today 
+https://t.rasp.yandex.ru/suburban/degunino--lobnja/today 
+https://t.rasp.yandex.ru/suburban/lobnja--iksha/today 
+https://yandex.ru/chat/#/chats/1%2F0%2Fb5135f88-81e4-45c1-ab91-8bd45b6cd37e
+
 
 # Формат файла:
 # - Строки, начинающиеся с '#', и пустые строки пропускаются.
