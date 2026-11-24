@@ -1,8 +1,8 @@
-name: Hourly Wget
+name: Hourly Fetch
 
 on:
   schedule:
-    # Каждый час в 15 минут (UTC). Смещение от 00 минут снижает риск задержки.
+    # Каждый час в 55 минут (UTC). Смещение от 00 минут снижает риск задержки.
     - cron: '55 * * * *'
   # Позволяет запускать workflow вручную из вкладки Actions
   workflow_dispatch:
@@ -13,7 +13,7 @@ permissions:
 
 # Предотвращает одновременный запуск двух копий workflow
 concurrency:
-  group: hourly-wget
+  group: hourly-fetch
   cancel-in-progress: false
 
 jobs:
@@ -26,25 +26,26 @@ jobs:
           # Токен с правом записи, чтобы push сработал
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download file with wget
-        run: |
-          # -O задаёт имя файла, -q тихий режим, но покажет ошибки
-          wget -q --show-progress -O strana.htm https://strana.news/news.html
+      - name: Install html2text
+        run: pip install html2text
+
+      - name: Fetch pages from url.txt
+        run: python3 fetch_pages.py
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add strana.htm
+          git add -A
 
-          # Если файл не изменился — выходим без пустого коммита
+          # Если файлы не изменились — выходим без пустого коммита
           if git diff --staged --quiet; then
             echo "No changes detected. Nothing to commit."
             exit 0
           fi
 
-          git commit -m "Automated hourly download: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git commit -m "Automated hourly fetch: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
 
           # На случай, если кто-то успел запушить между checkout и push
           git pull --rebase origin "${GITHUB_REF_NAME}"
