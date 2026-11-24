@@ -1,5 +1,7 @@
 https://strana.news/news.html |Архив материалов|Архив материалов
 https://news.ycombinator.com/newest
+https://habr.com/ru/articles/
+https://habr.com/ru/articles/page2/
 https://www.gazeta.ru/news/
 https://lenta.ru/parts/news/
 https://lenta.ru/parts/news/2/
