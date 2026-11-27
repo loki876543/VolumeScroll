@@ -288,7 +288,7 @@ def fetch_tutu():
 # ---------- СБОРКА ОТЧЁТА ----------
 def build_report():
     lines = []
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    now = datetime.now( timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(f"📅 Отчёт на {now}")
     lines.append("=" * 50)
 
