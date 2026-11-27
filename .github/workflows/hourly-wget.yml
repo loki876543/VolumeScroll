@@ -1,52 +1,18 @@
-name: Hourly Fetch
-
+name: Daily Aggregator
 on:
   schedule:
-    # Каждый час в 55 минут (UTC). Смещение от 00 минут снижает риск задержки.
-    - cron: '55 * * * *'
-  # Позволяет запускать workflow вручную из вкладки Actions
-  workflow_dispatch:
-
-# Даём workflow право делать push в репозиторий
-permissions:
-  contents: write
-
-# Предотвращает одновременный запуск двух копий workflow
-concurrency:
-  group: hourly-fetch
-  cancel-in-progress: false
+    - cron: "0 6 * * *"   # каждый день в 6:00 UTC
+  workflow_dispatch:       # возможность ручного запуска
 
 jobs:
-  download:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          # Токен с правом записи, чтобы push сработал
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install html2text
-        run: pip install html2text
-
-      - name: Fetch pages from url.txt
-        run: python3 fetch_pages.py
-
-      - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A
-
-          # Если файлы не изменились — выходим без пустого коммита
-          if git diff --staged --quiet; then
-            echo "No changes detected. Nothing to commit."
-            exit 0
-          fi
-
-          git commit -m "Automated hourly fetch: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-
-          # На случай, если кто-то успел запушить между checkout и push
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install requests beautifulsoup4 lxml feedparser
+      - name: Run aggregator
+        run: python aggregator.py
