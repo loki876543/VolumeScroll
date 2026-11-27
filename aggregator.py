@@ -148,7 +148,7 @@ def fetch_blogbankir():
                 posts.append({
                     "source": "Blogbankir (TG)",
                     "title": clean_text(text, max_len=2000),
-                    "url": "https://t.me/blogbankir",
+                    #"url": "https://t.me/blogbankir",
                 })
         return posts
     except Exception as e:
@@ -220,11 +220,11 @@ def fetch_tutu_route(st1, st2, name):
             return f"Маршрут: {name}\n  Не удалось извлечь время отправления"
 
         return (
-            f"Маршрут: {name}\n"
-            f"  Отправления: {', '.join(unique_departures[:15])}"
+            f"Маршрут: {name}"
+            f"   {', '.join(unique_departures[:15])}"
         )
     except Exception as e:
-        return f"Маршрут: {name}\n  Ошибка: {e}"
+        return f"Маршрут: {name}  Ошибка: {e}"
 
 
 def fetch_tutu():
@@ -239,14 +239,14 @@ def build_report():
     lines = []
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines.append(f"📅 Отчёт на {now}")
-    lines.append("=" * 50)
+    #lines.append("=" * 50)
 
-    lines.append("🌤 Погода в Москве (2 дня)")
+    #lines.append("🌤 Погода в Москве (2 дня)")
     lines.append(fetch_weather())
     lines.append("")
 
-    lines.append("📰 Новости за последние 12 часов")
-    lines.append("-" * 30)
+    #lines.append("📰 Новости за последние 12 часов")
+    #lines.append("-" * 30)
     all_news = []
     #all_news.extend(fetch_gazeta())
     all_news.extend(fetch_lenta())
