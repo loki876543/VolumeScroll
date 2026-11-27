@@ -244,7 +244,13 @@ def build_report():
     #lines.append("🌤 Погода в Москве (2 дня)")
     lines.append(fetch_weather())
     lines.append("")
-
+    
+    #lines.append("🚆 Расписание электричек (tutu.ru)")
+    lines.append("-" * 30)
+    tutu_lines = fetch_tutu()
+    lines.extend(tutu_lines if tutu_lines else ["  Нет данных."])
+    lines.append("")
+    
     #lines.append("📰 Новости за последние 12 часов")
     #lines.append("-" * 30)
     all_news = []
@@ -272,11 +278,7 @@ def build_report():
                 lines.append(f"    {it['url']}")
     lines.append("")
 
-    lines.append("🚆 Расписание электричек (tutu.ru)")
-    lines.append("-" * 30)
-    tutu_lines = fetch_tutu()
-    lines.extend(tutu_lines if tutu_lines else ["  Нет данных."])
-    lines.append("")
+
 
     return "\n".join(lines)
 
