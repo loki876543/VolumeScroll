@@ -55,7 +55,7 @@ def clean_text(text, max_len=200):
 
 
 # ---------- ИСТОЧНИКИ НОВОСТЕЙ ----------
-def fetch_gazeta():
+def fetch_gazeta0():
     url = "https://freenewsapi.ai/v1/search"
     params = {
         "host": "www.gazeta.ru",
@@ -103,8 +103,61 @@ def fetch_lenta():
     except Exception as e:
         return [{"source": "Lenta.ru", "error": str(e)}]
 
+def fetch_gazeta():
+    """Собирает новости Gazeta.ru через официальную RSS-ленту."""
+    feed_url = "https://www.gazeta.ru/export/rss/first.xml"
+    try:
+        feed = feedparser.parse(feed_url)
+        items = []
+        for entry in feed.entries:
+            # feedparser приводит дату к struct_time, конвертируем в ISO для фильтра
+            published = entry.get("published_parsed")
+            iso = ""
+            if published:
+                try:
+                    dt = datetime(*published[:6], tzinfo=timezone.utc)
+                    iso = dt.isoformat()
+                except Exception:
+                    iso = ""
+            if is_fresh(iso):
+                items.append({
+                    "source": "Gazeta.ru",
+                    "title": clean_text(entry.get("title", "")),
+                    "url": entry.get("link", ""),
+                })
+        return items
+    except Exception as e:
+        return [{"source": "Gazeta.ru", "error": str(e)}]
+
 
 def fetch_strana():
+    """Собирает новости Strana.news из веб-версии Telegram-канала @stranaua."""
+    url = "https://t.me/s/stranaua"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "lxml")
+        posts = []
+        # Каждый пост в контейнере с классом tgme_widget_message
+        for msg in soup.select(".tgme_widget_message"):
+            text_div = msg.select_one(".tgme_widget_message_text")
+            if not text_div:
+                continue
+            text = text_div.get_text(" ", strip=True)
+            time_tag = msg.select_one("time")
+            iso_date = time_tag.get("datetime") if time_tag else ""
+            if is_fresh(iso_date):
+                posts.append({
+                    "source": "Strana.news (TG)",
+                    "title": clean_text(text, max_len=200),
+                    "url": "https://t.me/stranaua",
+                })
+        return posts
+    except Exception as e:
+        return [{"source": "Strana.news (TG)", "error": str(e)}]
+        
+
+def fetch_strana0():
     url = "https://freenewsapi.ai/v1/search"
     params = {
         "host": "strana.in.ua",
