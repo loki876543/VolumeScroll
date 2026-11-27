@@ -1,7 +1,7 @@
 name: Daily Aggregator
 on:
   schedule:
-    - cron: "0 6 * * *"   # каждый день в 6:00 UTC
+    - cron: "55 0 * * *"   # каждый hour
   workflow_dispatch:       # возможность ручного запуска
 
 jobs:
