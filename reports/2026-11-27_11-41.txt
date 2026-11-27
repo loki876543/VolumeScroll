@@ -1,0 +1,55 @@
+📅 Отчёт на 2026-11-27 11:41 UTC
+==================================================
+🌤 Погода в Москве (2 дня)
+  2026-11-27: -4.0…-1.8°C, слабый снегопад, осадки 0.8 мм (38%), ветер 15.1 м/с ⚠️
+  2026-11-28: -4.5…-2.3°C, слабый снегопад, осадки 0.5 мм (25%), ветер 10.2 м/с ⚠️
+
+📰 Новости за последние 12 часов
+------------------------------
+
+🔹 Gazeta.ru
+  ❌ 401 Client Error: Unauthorized for url: https://freenewsapi.ai/v1/search?host=www.gazeta.ru&size=50&fields=title%2Curl%2Cpublished_at%2Clang
+
+🔹 Lenta.ru
+  • Москвичам пообещали заметное похолодание
+    https://lenta.ru/news/2026/11/27/moskvicham-poobeschali-zametnoe-poholodanie/
+  • Названы последствия политического кризиса вокруг бюджета Евросоюза
+    https://lenta.ru/news/2026/11/27/nazvany-posledstviya-politicheskogo-krizisa-vokrug-byudzheta-evrosoyuza/
+  • В Европе пожаловались на последствия украинского конфликта
+    https://lenta.ru/news/2026/11/27/raskryty-posledstviya-konflikta-na-ukraine-dlya-evropy/
+  • You Are Empty вернулась в Steam после спора о правах
+    https://lenta.ru/news/2026/11/27/you-are-empty/
+  • Названы простые способы предотвратить боль в спине в путешествиях
+    https://lenta.ru/news/2026/11/27/nazvany-prostye-sposoby-predotvratit-bol-v-spine-v-puteshestviyah/
+  • Пассажир самолета с отказавшим в небе двигателем описал инцидент фразой «в полном ужасе»
+    https://lenta.ru/news/2026/11/27/passazhir-samoleta-s-otkazavshim-v-nebe-dvigatelem-opisal-intsident-frazoy-v-polnom-uzhase/
+  • Владельцам питомцев напомнили об опасных новогодних украшениях
+    https://lenta.ru/news/2026/11/27/vladeltsam-pitomtsev-napomnili-ob-opasnyh-novogodnih-ukrasheniyah/
+  • В Кремле раскрыли темы встречи Путина и Пашиняна
+    https://lenta.ru/news/2026/11/27/v-kremle-raskryli-temy-na-vstreche-putina-i-pashinyana/
+  • В России пошли на убыль продажи одного вида машин
+    https://lenta.ru/news/2026/11/27/v-rossii-poshli-na-ubyl-prodazhi-odnogo-vida-mashin/
+  • Европейская авиакомпания столкнулась с риском потери всех самолетов
+    https://lenta.ru/news/2026/11/27/evropeyskaya-aviakompaniya-stolknulas-s-riskom-poteri-vseh-samoletov/
+
+🔹 Strana.news
+  ❌ 401 Client Error: Unauthorized for url: https://freenewsapi.ai/v1/search?host=strana.in.ua&size=50&fields=title%2Curl%2Cpublished_at%2Clang
+
+🔹 Blogbankir (TG)
+  • 💳 WB Банк запустил НС с 15.1% годовых Только для тех, у кого не было НС или вкладов в банке. Промо-ставка по накопительному счёту действует 60 дней на ежедневный остаток до 2 млн . Базовая ставка — 13…
+    https://t.me/blogbankir
+  • 🛒 Яндекс Путешествия: скидка 20% на бронирование жилья Сегодня, 27.11.26, до 23:59 по мск действует скидка 20% на бронирование отелей и другого жилья в России и за рубежом для проживания в 2027 году п…
+    https://t.me/blogbankir
+  • Новости 💳 Доступны к выбору категории кэшбэка в ВТБ. Меня порадовал 7% на ЖКХ в ВТБ Онлайн, макс. 500. 💳 МКБ с 01.12 повышает ставку по премиальному счёту «Накопительный+» на ежед. остаток до 20 млн ₽…
+    https://t.me/blogbankir
+  • Баста спустил собак на фондовый рынок. Встречайте «Финансовый пёс» — самое хвостатое инвестиционное шоу от Альфа-Банка 😂 ❤️ На Альфа-Шоу — новая премьера. Баста и команда четвероногих экспертов берутс…
+    https://t.me/blogbankir
+  • Акции банков по брокерскому обслуживанию (27.11.26) 💳 Альфа-Банк: новичкам до 7000 ₽ по акции за покупку ценных бумаг/драгоценных металлов в течение 5 месяцев подряд . Покупки: от 1000 ₽ → от 2500 ₽ →…
+    https://t.me/blogbankir
+
+🚆 Расписание электричек (tutu.ru)
+------------------------------
+Маршрут: Дегунино — Икша
+  Отправления: 14:43, 15:31, 15:03, 15:45, 15:18, 16:07, 15:30, 16:17, 15:48, 16:39, 15:58, 16:44, 16:18, 17:05, 16:33
+Маршрут: Икша
+  Отправления: 14:54, 15:42, 15:03, 15:52, 15:24, 16:12, 15:43, 16:27, 15:53, 16:42, 16:10, 16:57, 17:12, 16:33, 17:22
