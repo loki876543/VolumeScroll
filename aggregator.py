@@ -97,7 +97,7 @@ def fetch_lenta():
                 items.append({
                     "source": "Lenta.ru",
                     "title": clean_text(entry.get("title", "")),
-                    "url": entry.get("link", ""),
+                    #"url": entry.get("link", ""),
                 })
         return items
     except Exception as e:
@@ -145,7 +145,7 @@ def fetch_blogbankir():
             if is_fresh(iso_date):
                 posts.append({
                     "source": "Blogbankir (TG)",
-                    "title": clean_text(text, max_len=200),
+                    "title": clean_text(text, max_len=2000),
                     "url": "https://t.me/blogbankir",
                 })
         return posts
@@ -246,9 +246,9 @@ def build_report():
     lines.append("📰 Новости за последние 12 часов")
     lines.append("-" * 30)
     all_news = []
-    all_news.extend(fetch_gazeta())
+    #all_news.extend(fetch_gazeta())
     all_news.extend(fetch_lenta())
-    all_news.extend(fetch_strana())
+    #all_news.extend(fetch_strana())
     all_news.extend(fetch_blogbankir())
 
     sources = {}
