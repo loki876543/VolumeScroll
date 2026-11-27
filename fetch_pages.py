@@ -1,224 +1,283 @@
-#!/usr/bin/env python3
-"""Скачивает страницы из списка url.txt, конвертирует через html2text
-и собирает strana.htm — индекс со ссылками на полученные тексты.
-
-Формат строк url.txt:
-  https://example.com/                                      # вся страница
-  https://example.org/article | Introduction | Conclusion  # между маркерами (не включая их)
-  https://example.net/page | Contact                        # от начала страницы до маркера
-  https://example.net/page2 | Results |                     # от маркера до конца
-
-Строки с '#' и пустые строки пропускаются.
-Пробелы вокруг '|' обрезаются, регистр маркеров учитывается.
-Результаты: pages/<имя>.md (текст) и strana.htm (индекс ссылок).
-Если URL удалили из url.txt, соответствующий файл тоже удаляется.
-"""
-
-import html
-import html2text
-import os
+import requests
+from bs4 import BeautifulSoup
+import feedparser
+from datetime import datetime, timedelta, timezone
 import re
-import sys
-import urllib.request
-from datetime import datetime, timezone
-from html.parser import HTMLParser
-from pathlib import Path
 
-URL_FILE = Path("urls.txt")
-OUT_DIR = Path("pages")
-INDEX_FILE = Path("strana.htm")
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) VolumeScroll-fetch/1.0"
+# ---------- НАСТРОЙКИ ----------
+HOURS_BACK = 12
+TUTU_ROUTES = [
+    # (st1, st2, "Название маршрута")
+    (28904, 30404, "Дегунино — Икша"),
+    # Добавьте свои варианты:
+    (30404, 28904, "Икша"),
+]
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Aggregator/1.0"
+}
 
-class TitleParser(HTMLParser):
-    """Достаёт содержимое <title>...</title>."""
+# Расшифровка кодов погоды WMO (Open-Meteo)
+WEATHER_CODES = {
+    0: "ясно", 1: "преимущественно ясно", 2: "переменная облачность", 3: "пасмурно",
+    45: "туман", 48: "изморозь",
+    51: "слабая морось", 53: "морось", 55: "сильная морось",
+    56: "слабая ледяная морось", 57: "ледяная морось",
+    61: "слабый дождь", 63: "дождь", 65: "сильный дождь",
+    66: "слабый ледяной дождь", 67: "ледяной дождь",
+    71: "слабый снег", 73: "снег", 75: "сильный снег", 77: "снежная крупа",
+    80: "слабые ливни", 81: "ливни", 82: "сильные ливни",
+    85: "слабый снегопад", 86: "сильный снегопад",
+    95: "гроза", 96: "гроза с градом", 99: "сильная гроза с градом",
+}
 
-    def __init__(self):
-        super().__init__()
-        self.in_title = False
-        self.title = ""
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "title":
-            self.in_title = True
-
-    def handle_endtag(self, tag):
-        if tag == "title":
-            self.in_title = False
-
-    def handle_data(self, data):
-        if self.in_title:
-            self.title += data
-
-
-def output_name(url: str) -> str:
-    """Строит имя выходного файла из URL: домен + путь, санитизированные."""
-    m = re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://([^/?#]+)([^?#]*)", url)
-    if m:
-        host, path = m.group(1), m.group(2)
-    else:
-        host, path = url, ""
-    path = path.strip("/")
-    suffix = ("_" + path.replace("/", "_")) if path else ""
-    name = re.sub(r"[^A-Za-z0-9._-]", "_", host + suffix)
-    return name + ".md"
+# ---------- ВСПОМОГАТЕЛЬНЫЕ ----------
+def is_fresh(published_at_str, hours=HOURS_BACK):
+    """Проверяет, что дата (ISO 8601) не старше N часов."""
+    if not published_at_str:
+        return True
+    try:
+        dt = datetime.fromisoformat(published_at_str.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+        return dt >= cutoff
+    except Exception:
+        return True
 
 
-def fetch(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+def clean_text(text, max_len=200):
+    """Обрезает текст и убирает лишние пробелы."""
+    if not text:
+        return ""
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:max_len] + ("…" if len(text) > max_len else "")
 
 
-def extract(page: str, start_marker: str | None, end_marker: str | None):
-    """Вырезает фрагмент: после start_marker (или с начала) и до end_marker (или до конца).
-
-    Маркеры в результат не включаются. Возвращает (текст, ошибка).
-    """
-    begin = 0
-    if start_marker:
-        i = page.find(start_marker)  # find чувствителен к регистру
-        if i == -1:
-            return None, f"начальный маркер не найден: {start_marker!r}"
-        begin = i + len(start_marker)
-
-    end = len(page)
-    if end_marker:
-        j = page.find(end_marker, begin)
-        if j == -1:
-            return None, f"конечный маркер не найден: {end_marker!r}"
-        end = j
-
-    if begin > end:
-        return None, "маркеры идут в неправильном порядке"
-    return page[begin:end], None
-
-
-def parse_line(line: str):
-    """Разбирает строку url.txt -> (url, start_marker, end_marker)."""
-    parts = [p.strip() for p in line.split("|")]
-    url = parts[0]
-    if len(parts) == 1 or (len(parts) == 2 and not parts[1]):
-        # Весь текст страницы
-        return url, None, None
-    if len(parts) == 2:
-        # От начала страницы до маркера
-        return url, None, parts[1]
-    # len(parts) >= 3: между маркерами или от маркера до конца (пустой конец)
-    return url, parts[1] or None, parts[2] or None
+# ---------- ИСТОЧНИКИ НОВОСТЕЙ ----------
+def fetch_gazeta():
+    url = "https://freenewsapi.ai/v1/search"
+    params = {
+        "host": "www.gazeta.ru",
+        "size": 50,
+        "fields": "title,url,published_at,lang",
+    }
+    try:
+        r = requests.get(url, params=params, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        data = r.json().get("results", [])
+        items = []
+        for a in data:
+            if is_fresh(a.get("published_at")):
+                items.append({
+                    "source": "Gazeta.ru",
+                    "title": clean_text(a.get("title", "")),
+                    "url": a.get("url", ""),
+                })
+        return items
+    except Exception as e:
+        return [{"source": "Gazeta.ru", "error": str(e)}]
 
 
-def to_text(html_fragment: str) -> str:
-    """Конвертирует HTML-фрагмент в Markdown-подобный текст через html2text."""
-    converter = html2text.HTML2Text()
-    converter.ignore_links = True
-    converter.ignore_images = True
-    converter.body_width = 0  # не переносить строки
-    return converter.handle(html_fragment).strip() + "\n"
+def fetch_lenta():
+    feed_url = "https://lenta.ru/rss/news"
+    try:
+        feed = feedparser.parse(feed_url)
+        items = []
+        for entry in feed.entries:
+            published = entry.get("published", "")
+            iso = ""
+            if published:
+                try:
+                    dt = datetime(*published[:6], tzinfo=timezone.utc)
+                    iso = dt.isoformat()
+                except Exception:
+                    iso = ""
+            if is_fresh(iso):
+                items.append({
+                    "source": "Lenta.ru",
+                    "title": clean_text(entry.get("title", "")),
+                    "url": entry.get("link", ""),
+                })
+        return items
+    except Exception as e:
+        return [{"source": "Lenta.ru", "error": str(e)}]
 
 
-def build_index(entries, updated_at: str) -> str:
-    """Собирает strana.htm — список ссылок на сохранённые тексты."""
-    items = []
-    for entry in entries:
-        title = html.escape(entry["title"] or entry["url"])
-        href = html.escape(f"{OUT_DIR.name}/{entry['name']}")
-        source = html.escape(entry["url"])
-        items.append(
-            f'      <li><a href="{href}">{title}</a> <small>'
-            f'(<a href="{source}">источник</a>)</small></li>'
-        )
-    list_html = "\n".join(items) if items else "      <li>(нет сохранённых страниц)</li>"
-
-    return f"""<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Сохранённые страницы</title>
-</head>
-<body>
-  <h1>Сохранённые страницы</h1>
-  <p>Обновлено: {html.escape(updated_at)}</p>
-  <ul>
-{list_html}
-  </ul>
-</body>
-</html>
-"""
+def fetch_strana():
+    url = "https://freenewsapi.ai/v1/search"
+    params = {
+        "host": "strana.in.ua",
+        "size": 50,
+        "fields": "title,url,published_at,lang",
+    }
+    try:
+        r = requests.get(url, params=params, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        data = r.json().get("results", [])
+        items = []
+        for a in data:
+            if is_fresh(a.get("published_at")):
+                items.append({
+                    "source": "Strana.news",
+                    "title": clean_text(a.get("title", "")),
+                    "url": a.get("url", ""),
+                })
+        return items
+    except Exception as e:
+        return [{"source": "Strana.news", "error": str(e)}]
 
 
-def main() -> int:
-    if not URL_FILE.exists():
-        print("::error::url.txt не найден в корне репозитория")
-        return 1
-
-    OUT_DIR.mkdir(exist_ok=True)
-    expected = set()
-    entries, failed = [], []
-
-    for raw in URL_FILE.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#"):
-            continue
-
-        url, start_marker, end_marker = parse_line(line)
-        name = output_name(url)
-        expected.add(name)
-
-        try:
-            page = fetch(url)
-        except Exception as exc:  # noqa: BLE001
-            print(f"::warning title=Ошибка загрузки::{url}: {exc}")
-            failed.append(f"{url} — загрузка: {exc}")
-            continue
-
-        if start_marker is None and end_marker is None:
-            fragment = page
-        else:
-            fragment, err = extract(page, start_marker, end_marker)
-            if err:
-                print(f"::warning title=Маркер не найден::{url}: {err}")
-                failed.append(f"{url} — {err}")
+def fetch_blogbankir():
+    url = "https://t.me/s/blogbankir"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "lxml")
+        posts = []
+        for msg in soup.select(".tgme_widget_message"):
+            text_div = msg.select_one(".tgme_widget_message_text")
+            if not text_div:
                 continue
+            text = text_div.get_text(" ", strip=True)
+            time_tag = msg.select_one("time")
+            iso_date = time_tag.get("datetime") if time_tag else ""
+            if is_fresh(iso_date):
+                posts.append({
+                    "source": "Blogbankir (TG)",
+                    "title": clean_text(text, max_len=200),
+                    "url": "https://t.me/blogbankir",
+                })
+        return posts
+    except Exception as e:
+        return [{"source": "Blogbankir (TG)", "error": str(e)}]
 
-        # Заголовок страницы берём из полного HTML (фрагмент может его не содержать)
-        tp = TitleParser()
-        try:
-            tp.feed(page)
-        except Exception:  # noqa: BLE001
-            pass
-        title = " ".join(tp.title.split())
 
-        content = to_text(fragment)
-        (OUT_DIR / name).write_text(content, encoding="utf-8")
-        print(f"Сохранено {OUT_DIR.name}/{name} ({len(content)} символов) <- {url}")
-        entries.append({"name": name, "url": url, "title": title})
+# ---------- ПОГОДА ----------
+def fetch_weather():
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": 55.7558,
+        "longitude": 37.6173,
+        "daily": (
+            "temperature_2m_max,temperature_2m_min,"
+            "precipitation_sum,precipitation_probability_max,"
+            "weather_code,wind_speed_10m_max"
+        ),
+        "forecast_days": 2,
+        "timezone": "Europe/Moscow",
+    }
+    try:
+        r = requests.get(url, params=params, headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        d = r.json().get("daily", {})
+        dates = d.get("time", [])
+        tmax = d.get("temperature_2m_max", [])
+        tmin = d.get("temperature_2m_min", [])
+        precip = d.get("precipitation_sum", [])
+        prob = d.get("precipitation_probability_max", [])
+        codes = d.get("weather_code", [])
+        wind = d.get("wind_speed_10m_max", [])
 
-    # Удаляем файлы, чьих URL больше нет в url.txt
-    for f in OUT_DIR.iterdir():
-        if f.is_file() and f.name not in expected:
-            f.unlink()
-            print(f"Удалено {OUT_DIR.name}/{f.name} (URL отсутствует в url.txt)")
+        lines = []
+        for i, date in enumerate(dates):
+            desc = WEATHER_CODES.get(codes[i], f"код {codes[i]}")
+            wind_val = wind[i]
+            wind_str = f"{wind_val} м/с"
+            if wind_val is not None and wind_val > 5:
+                wind_str += " ⚠️"
+            lines.append(
+                f"  {date}: {tmin[i]}…{tmax[i]}°C, {desc}, "
+                f"осадки {precip[i]} мм ({prob[i]}%), ветер {wind_str}"
+            )
+        return "\n".join(lines) if lines else "  Нет данных."
+    except Exception as e:
+        return f"  Ошибка получения погоды: {e}"
 
-    # Собираем strana.htm — индекс со ссылками на тексты
-    updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    INDEX_FILE.write_text(build_index(entries, updated_at), encoding="utf-8")
-    print(f"Собран {INDEX_FILE}: {len(entries)} ссылок")
 
-    # Сводка во вкладку Summary прогона
-    summary = os.environ.get("GITHUB_STEP_SUMMARY")
-    if summary:
-        with open(summary, "a", encoding="utf-8") as fh:
-            fh.write("### Результаты загрузки\n\n")
-            for entry in entries:
-                fh.write(f"- ✅ `{entry['name']}`\n")
-            for item in failed:
-                fh.write(f"- ❌ {item}\n")
+# ---------- TUTU.RU (только отправления, в одну строку) ----------
+def fetch_tutu_route(st1, st2, name):
+    url = f"https://www.tutu.ru/rasp.php?st1={st1}&st2={st2}"
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "lxml")
 
-    print(f"Готово: сохранено {len(entries)}, ошибок {len(failed)}")
-    return 0
+        time_pattern = re.compile(r"\b([01]?\d|2[0-3]):[0-5]\d\b")
+        departures = []
+
+        for element in soup.find_all(string=time_pattern):
+            text = element.strip()
+            match = re.match(r"^([01]?\d|2[0-3]):[0-5]\d", text)
+            if match:
+                departures.append(match.group(0))
+
+        unique_departures = list(dict.fromkeys(departures))
+
+        if not unique_departures:
+            return f"Маршрут: {name}\n  Не удалось извлечь время отправления"
+
+        return (
+            f"Маршрут: {name}\n"
+            f"  Отправления: {', '.join(unique_departures[:15])}"
+        )
+    except Exception as e:
+        return f"Маршрут: {name}\n  Ошибка: {e}"
+
+
+def fetch_tutu():
+    output = []
+    for st1, st2, name in TUTU_ROUTES:
+        output.append(fetch_tutu_route(st1, st2, name))
+    return output
+
+
+# ---------- СБОРКА ОТЧЁТА ----------
+def build_report():
+    lines = []
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    lines.append(f"📅 Отчёт на {now}")
+    lines.append("=" * 50)
+
+    lines.append("🌤 Погода в Москве (2 дня)")
+    lines.append(fetch_weather())
+    lines.append("")
+
+    lines.append("📰 Новости за последние 12 часов")
+    lines.append("-" * 30)
+    all_news = []
+    all_news.extend(fetch_gazeta())
+    all_news.extend(fetch_lenta())
+    all_news.extend(fetch_strana())
+    all_news.extend(fetch_blogbankir())
+
+    sources = {}
+    for item in all_news:
+        src = item.get("source", "Unknown")
+        sources.setdefault(src, []).append(item)
+
+    for src, items in sources.items():
+        lines.append(f"\n🔹 {src}")
+        if items and "error" in items[0]:
+            lines.append(f"  ❌ {items[0]['error']}")
+            continue
+        if not items:
+            lines.append("  Нет свежих материалов.")
+            continue
+        for it in items[:10]:
+            lines.append(f"  • {it['title']}")
+            if it.get("url"):
+                lines.append(f"    {it['url']}")
+    lines.append("")
+
+    lines.append("🚆 Расписание электричек (tutu.ru)")
+    lines.append("-" * 30)
+    tutu_lines = fetch_tutu()
+    lines.extend(tutu_lines if tutu_lines else ["  Нет данных."])
+    lines.append("")
+
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    print(build_report())
