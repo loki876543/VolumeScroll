@@ -15,4 +15,4 @@ jobs:
       - name: Install deps
         run: pip install requests beautifulsoup4 lxml feedparser
       - name: Run aggregator
-        run: python aggregator.py
+        run: python fetch_pages.py
