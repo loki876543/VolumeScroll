@@ -57,30 +57,6 @@ def clean_text(text, max_len=200):
 
 
 # ---------- ИСТОЧНИКИ НОВОСТЕЙ ----------
-def fetch_gazeta0():
-    url = "https://freenewsapi.ai/v1/search"
-    params = {
-        "host": "www.gazeta.ru",
-        "size": 50,
-        "fields": "title,url,published_at,lang",
-    }
-    try:
-        r = requests.get(url, params=params, headers=HEADERS, timeout=30)
-        r.raise_for_status()
-        data = r.json().get("results", [])
-        items = []
-        for a in data:
-            if is_fresh(a.get("published_at")):
-                items.append({
-                    "source": "Gazeta.ru",
-                    "title": clean_text(a.get("title", "")),
-                    "url": a.get("url", ""),
-                })
-        return items
-    except Exception as e:
-        return [{"source": "Gazeta.ru", "error": str(e)}]
-
-
 def fetch_lenta():
     feed_url = "https://lenta.ru/rss/news"
     try:
@@ -104,31 +80,6 @@ def fetch_lenta():
         return items
     except Exception as e:
         return [{"source": "Lenta.ru", "error": str(e)}]
-
-
-def fetch_strana0():
-    url = "https://freenewsapi.ai/v1/search"
-    params = {
-        "host": "strana.in.ua",
-        "size": 50,
-        "fields": "title,url,published_at,lang",
-    }
-    try:
-        r = requests.get(url, params=params, headers=HEADERS, timeout=30)
-        r.raise_for_status()
-        data = r.json().get("results", [])
-        items = []
-        for a in data:
-            if is_fresh(a.get("published_at")):
-                items.append({
-                    "source": "Strana.news",
-                    "title": clean_text(a.get("title", "")),
-                    "url": a.get("url", ""),
-                })
-        return items
-    except Exception as e:
-        return [{"source": "Strana.news", "error": str(e)}]
-
 
 def fetch_blogbankir():
     url = "https://t.me/s/blogbankir"
@@ -232,6 +183,7 @@ def fetch_tutu():
     for st1, st2, name in TUTU_ROUTES:
         output.append(fetch_tutu_route(st1, st2, name))
     return output
+
 def fetch_gazeta():
     """Собирает новости Gazeta.ru через официальную RSS-ленту."""
     feed_url = "https://www.gazeta.ru/export/rss/first.xml"
@@ -252,7 +204,7 @@ def fetch_gazeta():
                 items.append({
                     "source": "Gazeta.ru",
                     "title": clean_text(entry.get("title", "")),
-                    "url": entry.get("link", ""),
+                    #"url": entry.get("link", ""),
                 })
         return items
     except Exception as e:
@@ -279,7 +231,7 @@ def fetch_strana():
                 posts.append({
                     "source": "Strana.news (TG)",
                     "title": clean_text(text, max_len=200),
-                    "url": "https://t.me/stranaua",
+                    #"url": "https://t.me/stranaua",
                 })
         return posts
     except Exception as e:
@@ -289,7 +241,7 @@ def fetch_strana():
 # ---------- СБОРКА ОТЧЁТА ----------
 def build_report():
     lines = []
-    now = datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M UTC")
+    now = datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M")
     lines.append(f"📅 Отчёт на {now}")
     #lines.append("=" * 50)
 
