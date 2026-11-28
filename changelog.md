@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-28 — Feed watcher
+
+### Added
+- Scheduled GitHub Action (`.github/workflows/zai-fetch.yml`) running `zai-fetch.py` at 07:00 MSK, committing `racing.txt` and `last_seen.json`.
+- Watched Atom feeds: `ac-to-rf2` releases and LiveJournal `snake-d-ha` entries (baseline seeded on the first run).
+- `racing.txt` rotation: append a timestamped run while under 100 KiB, then overwrite with the next run.
+
+### Changed
+- `zai-fetch.py` now uses repo-relative `last_seen.json` and writes all output to `racing.txt`.
+
 ## 2026-11-28 — Stats text refinement (second patchset)
 
 ### Changed
