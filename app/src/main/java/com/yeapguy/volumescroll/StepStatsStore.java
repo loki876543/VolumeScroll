@@ -446,6 +446,11 @@ public final class StepStatsStore {
         return String.format(Locale.US, "%d min", minutes);
     }
 
+    /** Total minutes only, e.g. "125 min" — used by the walking notification. */
+    public static String formatMinutesOnly(long millis) {
+        return String.format(Locale.US, "%d min", millis / 60000L);
+    }
+
     // ------------------------------------------------------------------
     // Daily log file: one "date,steps,speed(s/min)" line per finished day
     // ------------------------------------------------------------------

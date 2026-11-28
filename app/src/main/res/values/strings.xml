@@ -25,6 +25,7 @@
     <string name="stat_mode_calendar">Calendar</string>
     <string name="stat_mode_stats">Stats</string>
     <string name="stat_mode_graph">Graph</string>
+    <string name="stat_mode_speed">Speed</string>
     <string name="stat_last_7_days">Last 7 days</string>
     <string name="stat_last_30_days">Last 30 days</string>
     <string name="stat_last_4_months">Last 4 months</string>

@@ -17,7 +17,7 @@ android {
         // which makes Pie the oldest Android version the app can run on.
         minSdk = 28
         targetSdk = 36
-        versionCode = 19
+        versionCode = 20
         versionName = "1.9.2-pie"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textSpeedWarnHighValue;
     private TextView textSpeedWarnLowValue;
     private LinearLayout graphTabContainer;
+    private LinearLayout speedTabContainer;
     private MinuteGraphView minuteGraph;
     private TextView textMinuteGraphNow;
     private SpeedGraphView speedGraph;
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         this.sliderSpeedWarnLow = findViewById(R.id.sliderSpeedWarnLow);
         this.textSpeedWarnLowValue = findViewById(R.id.textSpeedWarnLowValue);
         this.graphTabContainer = findViewById(R.id.graphTabContainer);
+        this.speedTabContainer = findViewById(R.id.speedTabContainer);
         this.minuteGraph = findViewById(R.id.minuteGraph);
         this.textMinuteGraphNow = findViewById(R.id.textMinuteGraphNow);
         this.speedGraph = findViewById(R.id.speedGraph);
@@ -195,7 +197,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     int tab = checkedId == R.id.buttonTabCalendar ? SettingsRepository.TAB_CALENDAR
                             : checkedId == R.id.buttonTabRolling ? SettingsRepository.TAB_ROLLING
-                            : SettingsRepository.TAB_GRAPH;
+                            : checkedId == R.id.buttonTabGraph ? SettingsRepository.TAB_GRAPH
+                            : SettingsRepository.TAB_SPEED;
                     if (tab != settingsRepository.getStepStatsTab()) {
                         settingsRepository.setStepStatsTab(tab);
                     }
@@ -204,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         int initialTab = settingsRepository.getStepStatsTab();
         this.stepTabs.check(initialTab == SettingsRepository.TAB_ROLLING ? R.id.buttonTabRolling
                 : initialTab == SettingsRepository.TAB_GRAPH ? R.id.buttonTabGraph
+                : initialTab == SettingsRepository.TAB_SPEED ? R.id.buttonTabSpeed
                 : R.id.buttonTabCalendar);
 
         this.monthPrevButton.setOnClickListener(v -> {
@@ -418,10 +422,12 @@ public class MainActivity extends AppCompatActivity {
         boolean calendarTab = tab == SettingsRepository.TAB_CALENDAR;
         boolean rollingTab = tab == SettingsRepository.TAB_ROLLING;
         boolean graphTab = tab == SettingsRepository.TAB_GRAPH;
+        boolean speedTab = tab == SettingsRepository.TAB_SPEED;
 
         calendarContainer.setVisibility(calendarTab ? View.VISIBLE : View.GONE);
         stepStatsText.setVisibility(rollingTab ? View.VISIBLE : View.GONE);
         graphTabContainer.setVisibility(graphTab ? View.VISIBLE : View.GONE);
+        speedTabContainer.setVisibility(speedTab ? View.VISIBLE : View.GONE);
 
         StepStatsStore store = new StepStatsStore(this);
         if (calendarTab) {
@@ -432,14 +438,15 @@ public class MainActivity extends AppCompatActivity {
         }
         if (graphTab) {
             updateMinuteGraph(store);
+        }
+        if (speedTab) {
             updateSpeedGraph(store);
         }
     }
 
     /**
      * Rolling tab: for every period (week, month, 4 months, year, all) —
-     * the total steps, the days in the period and the average speed of the
-     * period in steps per minute, then "walked today" as before.
+     * the average steps per day, then "walked today" as before.
      */
     private String buildRollingStats(StepStatsStore store) {
         NumberFormat numberFormat = NumberFormat.getIntegerInstance();
@@ -458,15 +465,8 @@ public class MainActivity extends AppCompatActivity {
     private static void appendPeriodRow(StringBuilder b, String label,
                                         StepStatsStore.PeriodStats stats, String unit,
                                         NumberFormat numberFormat) {
-        b.append(label).append(": ")
-                .append(numberFormat.format(stats.steps)).append(" \u00B7 ")
-                .append(stats.days).append(" d \u00B7 ");
-        if (stats.walkMs > 0L) {
-            b.append(Math.round(stats.steps / (stats.walkMs / 60000f)));
-        } else {
-            b.append('\u2014');
-        }
-        b.append(' ').append(unit).append('\n');
+        long stepsPerDay = stats.days > 0 ? stats.steps / stats.days : 0L;
+        b.append(label).append(": ").append(numberFormat.format(stepsPerDay)).append('\n');
     }
 
     /**
@@ -477,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
         int[] minutes = store.getMinuteStepsToday();
         Calendar now = Calendar.getInstance();
         int nowMinute = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
-        this.minuteGraph.setData(minutes, nowMinute);
+        this.minuteGraph.setData(minutes, nowMinute, this.settingsRepository.getSpeedWarnLow());
         int lastMinuteSteps = minutes[Math.max(0, Math.min(nowMinute - 1, minutes.length - 1))];
         this.textMinuteGraphNow.setText(getString(R.string.minute_graph_now_prefix) + " "
                 + (lastMinuteSteps > 0
@@ -543,7 +543,8 @@ public class MainActivity extends AppCompatActivity {
         this.graphCacheSteps = stepsToday;
         this.graphCacheWalkMs = walkMs;
         store.fillDailyAvgSpeeds(this.graphSpeeds);
-        this.speedGraph.setData(this.graphSpeeds, this.graphSpeeds.length - 1);
+        this.speedGraph.setData(this.graphSpeeds, this.graphSpeeds.length - 1,
+                this.settingsRepository.getSpeedWarnLow());
         float avgToday = this.graphSpeeds[this.graphSpeeds.length - 1];
         this.textSpeedGraphToday.setText(getString(R.string.speed_graph_today_prefix) + " "
                 + (avgToday > 0f ? String.valueOf(Math.round(avgToday)) : "\u2014"));

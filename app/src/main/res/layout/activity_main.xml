@@ -112,7 +112,7 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
-                <!-- Graph tab: minute-by-minute speed + the yearly averages -->
+                <!-- Graph tab: minute-by-minute speed of the current day -->
                 <LinearLayout
                     android:id="@+id/graphTabContainer"
                     android:layout_width="match_parent"
@@ -150,10 +150,20 @@
                         android:layout_height="72dp"
                         android:layout_marginTop="4dp" />
 
+                </LinearLayout>
+
+                <!-- Speed tab: year of daily average speeds, one hairline bar per day -->
+                <LinearLayout
+                    android:id="@+id/speedTabContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -231,6 +241,20 @@
                         android:minHeight="0dp"
                         android:textSize="11sp"
                         android:text="@string/stat_mode_graph" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonTabSpeed"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="26dp"
+                        android:layout_weight="1"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:insetLeft="2dp"
+                        android:insetRight="2dp"
+                        android:minHeight="0dp"
+                        android:textSize="11sp"
+                        android:text="@string/stat_mode_speed" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -537,9 +561,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:stepSize="5"
-                        android:value="0"
-                        android:valueFrom="0"
-                        android:valueTo="300" />
+                        android:value="110"
+                        android:valueFrom="50"
+                        android:valueTo="200" />
 
                     <TextView
                         android:id="@+id/textSpeedWarnHighValue"
@@ -570,9 +594,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:stepSize="5"
-                        android:value="0"
-                        android:valueFrom="0"
-                        android:valueTo="300" />
+                        android:value="90"
+                        android:valueFrom="50"
+                        android:valueTo="200" />
 
                     <TextView
                         android:id="@+id/textSpeedWarnLowValue"

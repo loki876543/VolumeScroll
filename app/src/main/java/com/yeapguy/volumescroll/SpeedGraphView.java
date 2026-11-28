@@ -11,9 +11,10 @@ import com.google.android.material.color.MaterialColors;
 
 /**
  * Compact bar graph of the daily average walking speed (steps per minute)
- * over the last year: one hairline bar per day, today highlighted, the
- * yearly maximum labeled at the top. Days without recorded walk time are
- * gaps. Pure Canvas drawing — no chart library needed.
+ * over the last year: one hairline bar per day, today highlighted. The
+ * vertical scale starts at the low warning limit, like the minute graph.
+ * Days without recorded walk time are gaps. Pure Canvas drawing — no chart
+ * library needed.
  */
 public class SpeedGraphView extends View {
     private static final int GRAPH_DAYS = StepStatsStore.SPEED_GRAPH_DAYS;
@@ -25,6 +26,7 @@ public class SpeedGraphView extends View {
 
     private float[] speeds = new float[0];
     private int todayIndex = -1;
+    private int lowLimit = 90;
     private boolean colorsInitialized = false;
 
     public SpeedGraphView(Context context) {
@@ -40,10 +42,12 @@ public class SpeedGraphView extends View {
     /**
      * @param speeds     daily average speeds in steps per minute, oldest first
      * @param todayIndex index of today's bar (highlighted)
+     * @param lowLimit   low warning limit; the graph's vertical scale starts here
      */
-    public void setData(float[] speeds, int todayIndex) {
+    public void setData(float[] speeds, int todayIndex, int lowLimit) {
         this.speeds = speeds;
         this.todayIndex = todayIndex;
+        this.lowLimit = lowLimit;
         invalidate();
     }
 
@@ -75,14 +79,11 @@ public class SpeedGraphView extends View {
             return;
         }
 
-        float max = 0f;
+        float max = this.lowLimit + 1f;
         for (float value : this.speeds) {
             if (value > max) {
                 max = value;
             }
-        }
-        if (max < 1f) {
-            max = 1f;
         }
 
         // Gridline at the max level, its value labeled in the top strip.
@@ -95,10 +96,11 @@ public class SpeedGraphView extends View {
         int maxBarHeight = baseline - plotTop - dp(2);
         for (int i = 0; i < this.speeds.length; i++) {
             float value = this.speeds[i];
-            if (value <= 0f) {
+            if (value <= this.lowLimit) {
                 continue;
             }
-            float barHeight = Math.max(dp(2), (value / max) * maxBarHeight);
+            float barHeight = Math.max(dp(2),
+                    ((value - this.lowLimit) / (max - this.lowLimit)) * maxBarHeight);
             float left = i * slot;
             Paint paint = (i == this.todayIndex) ? this.todayPaint : this.barPaint;
             canvas.drawRect(left, baseline - barHeight, left + barWidth, baseline, paint);

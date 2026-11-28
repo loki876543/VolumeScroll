@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import java.text.NumberFormat;
@@ -31,12 +30,16 @@ import java.util.Deque;
  * notification. Also computes the live walking speed in steps per second.
  */
 public class StepCounterService extends Service implements SensorEventListener {
-    private static final String CHANNEL_ID = "step_counter";
+    private static final String CHANNEL_ID = "step_counter_silent";
     private static final int NOTIFICATION_ID = 41;
     private static final long MIN_NOTIF_REFRESH_INTERVAL_MS = 2000;
     private static final long WALK_IDLE_TIMEOUT_MS = 10000;
-    /** While the last-minute speed decays after the last step, redraw this often. */
-    private static final long MINUTE_TICK_MS = 5000;
+    /** A walk starts counting (and feeding speed stats) at this step of the session. */
+    private static final int WALK_START_STEPS = 10;
+    /** Speed display and history are sampled at most this often while walking. */
+    private static final long SPEED_SAMPLE_INTERVAL_MS = 60_000L;
+    /** Refresh the minutes-only walking time even when steps briefly pause. */
+    private static final long WALK_MINUTES_TICK_MS = 30_000L;
     /** Window used to average recent steps into a steps-per-second rate. */
     private static final long SPEED_WINDOW_MS = 8000;
     /** Window for the "last minute" speed shown in the notification. */
@@ -64,7 +67,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     private StepStatsStore store;
     private SettingsRepository settingsRepository;
     private Runnable walkTimeoutRunnable;
-    private Runnable minuteTickRunnable;
+    private Runnable walkMinutesTickRunnable;
     private Runnable speedWarnRunnable;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Deque<Long> stepTimes = new ArrayDeque<>();
@@ -72,7 +75,11 @@ public class StepCounterService extends Service implements SensorEventListener {
     private boolean stepDetectorAvailable = false;
     private long lastCounterSeen = Long.MIN_VALUE;
     private long walkSessionStartElapsed = 0;
+    private long sessionFirstStepElapsed = 0;
+    private int sessionSteps = 0;
     private long lastStepElapsed = 0;
+    private long lastSpeedSampleElapsed = 0;
+    private String cachedSpeedText = "\u2014";
     private long lastNotifRefreshElapsed = 0;
     private long highBreachStartElapsed = 0;
     private long lowBreachStartElapsed = 0;
@@ -128,7 +135,6 @@ public class StepCounterService extends Service implements SensorEventListener {
         startAsForeground();
         registerListeners();
         scheduleWalkTimeoutCheck();
-        scheduleMinuteTick();
         scheduleSpeedWarnCheck();
         return START_STICKY;
     }
@@ -140,8 +146,8 @@ public class StepCounterService extends Service implements SensorEventListener {
         }
         this.listenersRegistered = false;
         this.handler.removeCallbacks(this.walkTimeoutRunnable);
-        if (this.minuteTickRunnable != null) {
-            this.handler.removeCallbacks(this.minuteTickRunnable);
+        if (this.walkMinutesTickRunnable != null) {
+            this.handler.removeCallbacks(this.walkMinutesTickRunnable);
         }
         if (this.speedWarnRunnable != null) {
             this.handler.removeCallbacks(this.speedWarnRunnable);
@@ -228,13 +234,24 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     private void onStepDetected(long stepMs, long nowMs) {
-        recordStepTime(stepMs);
-        if (this.walkSessionStartElapsed == 0) {
-            this.walkSessionStartElapsed = nowMs;
+        if (this.sessionFirstStepElapsed == 0L) {
+            this.sessionFirstStepElapsed = nowMs;
+            this.sessionSteps = 0;
         }
+        this.sessionSteps++;
         this.lastStepElapsed = nowMs;
+
+        // The first steps of a session are ignored: no walk timer, no speed
+        // samples, no speed display until the threshold is reached.
+        if (this.sessionSteps >= WALK_START_STEPS) {
+            if (this.walkSessionStartElapsed == 0L) {
+                this.walkSessionStartElapsed = nowMs;
+                this.cachedSpeedText = "\u2014";
+                scheduleWalkMinutesTick();
+            }
+            recordStepTime(stepMs);
+        }
         scheduleWalkTimeoutCheck();
-        scheduleMinuteTick();
         refreshNotificationThrottled();
     }
 
@@ -264,7 +281,19 @@ public class StepCounterService extends Service implements SensorEventListener {
             sLiveStepsPerSecond = rate;
             sLastStepElapsed = stepMs;
         }
+        sampleSpeed(stepMs, rate);
+    }
+
+    /** Speed history and the displayed value refresh at most once a minute. */
+    private void sampleSpeed(long stepMs, float rate) {
+        if (this.lastSpeedSampleElapsed != 0L
+                && stepMs - this.lastSpeedSampleElapsed < SPEED_SAMPLE_INTERVAL_MS) {
+            return;
+        }
+        this.lastSpeedSampleElapsed = stepMs;
         this.store.recordSpeed(rate);
+        int lastMinute = getLastMinuteSteps();
+        this.cachedSpeedText = lastMinute > 0 ? String.valueOf(lastMinute) : "\u2014";
     }
 
     private void scheduleWalkTimeoutCheck() {
@@ -275,42 +304,40 @@ public class StepCounterService extends Service implements SensorEventListener {
         this.handler.postDelayed(this.walkTimeoutRunnable, WALK_IDLE_TIMEOUT_MS + 250L);
     }
 
-    private void scheduleMinuteTick() {
-        if (this.minuteTickRunnable == null) {
-            this.minuteTickRunnable = this::minuteTick;
+    private void scheduleWalkMinutesTick() {
+        if (this.walkMinutesTickRunnable == null) {
+            this.walkMinutesTickRunnable = this::walkMinutesTick;
         }
-        this.handler.removeCallbacks(this.minuteTickRunnable);
-        this.handler.postDelayed(this.minuteTickRunnable, MINUTE_TICK_MS);
+        this.handler.removeCallbacks(this.walkMinutesTickRunnable);
+        this.handler.postDelayed(this.walkMinutesTickRunnable, WALK_MINUTES_TICK_MS);
     }
 
-    /**
-     * While the last-minute speed can still change (a step happened within
-     * the staleness horizon), keep redrawing the notification so the number
-     * runs down and turns into "—" instead of freezing after the last step.
-     */
-    private void minuteTick() {
-        boolean fresh;
-        synchronized (MINUTE_LOCK) {
-            fresh = sLastMinuteStepElapsed != 0L
-                    && SystemClock.elapsedRealtime() - sLastMinuteStepElapsed
-                            <= LAST_MINUTE_MAX_AGE_MS;
-        }
-        if (!fresh) {
-            // Value is stable at "—" now; the next step restarts the loop.
+    /** Keep the minutes-only walking time current while a session is active. */
+    private void walkMinutesTick() {
+        if (this.walkSessionStartElapsed == 0L) {
             return;
         }
         updateNotification();
-        scheduleMinuteTick();
+        scheduleWalkMinutesTick();
     }
 
     private void checkWalkTimeout() {
-        if (this.walkSessionStartElapsed == 0) {
+        if (this.sessionFirstStepElapsed == 0L) {
             return;
         }
         long now = SystemClock.elapsedRealtime();
         if (now - this.lastStepElapsed >= WALK_IDLE_TIMEOUT_MS) {
-            this.store.addWalkTime(now - this.walkSessionStartElapsed);
-            this.walkSessionStartElapsed = 0;
+            if (this.walkSessionStartElapsed != 0L) {
+                this.store.addWalkTime(now - this.walkSessionStartElapsed);
+            }
+            this.walkSessionStartElapsed = 0L;
+            this.sessionFirstStepElapsed = 0L;
+            this.sessionSteps = 0;
+            this.lastSpeedSampleElapsed = 0L;
+            this.stepTimes.clear();
+            if (this.walkMinutesTickRunnable != null) {
+                this.handler.removeCallbacks(this.walkMinutesTickRunnable);
+            }
             updateNotification();
             return;
         }
@@ -376,11 +403,11 @@ public class StepCounterService extends Service implements SensorEventListener {
     private void playWarnTone(boolean overHigh) {
         try {
             if (this.toneGenerator == null) {
-                this.toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 80);
+                this.toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             }
             // Double beep when too fast, a single low beep when too slow.
             this.toneGenerator.startTone(overHigh
-                    ? ToneGenerator.TONE_PROP_BEEP2 : ToneGenerator.TONE_PROP_BEEP, 900);
+                    ? ToneGenerator.TONE_PROP_BEEP2 : ToneGenerator.TONE_PROP_BEEP, 1500);
         } catch (RuntimeException ignored) {
             // No audio focus or stream problem: skip this warning.
         }
@@ -408,8 +435,9 @@ public class StepCounterService extends Service implements SensorEventListener {
             return;
         }
         NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID, getString(R.string.notif_channel_steps), NotificationManager.IMPORTANCE_DEFAULT);
+                CHANNEL_ID, getString(R.string.notif_channel_steps), NotificationManager.IMPORTANCE_LOW);
         channel.setShowBadge(false);
+        channel.setSound(null, null);
         nm.createNotificationChannel(channel);
     }
 
@@ -424,13 +452,8 @@ public class StepCounterService extends Service implements SensorEventListener {
         RemoteViews big = new RemoteViews(getPackageName(), R.layout.notif_steps_expanded);
 
         // Row 1 of both views: three large numbers — steps | walked | speed.
-        String speedText;
-        int lastMinute = getLastMinuteSteps();
-        if (lastMinute > 0) {
-            speedText = String.valueOf(lastMinute);
-        } else {
-            speedText = "\u2014";
-        }
+        // The speed is cached and refreshed at most once a minute.
+        String speedText = this.cachedSpeedText;
 
         compact.setTextViewText(R.id.notifStepsValue, stepsFormatted);
         applyWalkViews(compact, walking, currentWalkMs, walkTodayMs);
@@ -457,17 +480,10 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     private void applyWalkViews(RemoteViews views, boolean walking, long currentWalkMs, long walkTodayMs) {
-        if (!walking) {
-            views.setViewVisibility(R.id.notifWalkChrono, View.GONE);
-            views.setViewVisibility(R.id.notifWalkValue, View.VISIBLE);
-            views.setTextViewText(R.id.notifWalkValue, StepStatsStore.formatDuration(walkTodayMs));
-            views.setTextViewText(R.id.notifWalkLabel, getString(R.string.notif_label_walk_today));
-        } else {
-            views.setViewVisibility(R.id.notifWalkChrono, View.VISIBLE);
-            views.setViewVisibility(R.id.notifWalkValue, View.GONE);
-            views.setChronometer(R.id.notifWalkChrono,
-                    SystemClock.elapsedRealtime() - currentWalkMs, null, true);
-            views.setTextViewText(R.id.notifWalkLabel, getString(R.string.notif_label_walking));
-        }
+        long minutes = walking ? currentWalkMs : walkTodayMs;
+        views.setTextViewText(R.id.notifWalkValue, StepStatsStore.formatMinutesOnly(minutes));
+        views.setTextViewText(R.id.notifWalkLabel, walking
+                ? getString(R.string.notif_label_walking)
+                : getString(R.string.notif_label_walk_today));
     }
 }

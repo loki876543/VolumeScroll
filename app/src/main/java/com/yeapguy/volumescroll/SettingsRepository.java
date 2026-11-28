@@ -20,8 +20,11 @@ public final class SettingsRepository {
     public static final int MIN_LOOP_SECONDS = 1;
     public static final int MAX_LOOP_SECONDS = 30;
 
-    /** Speed warning limits, steps per minute. 0 disables the warning. */
-    public static final int MAX_SPEED_WARN = 300;
+    /** Speed warning limits, steps per minute. */
+    public static final int MIN_SPEED_WARN = 50;
+    public static final int MAX_SPEED_WARN = 200;
+    public static final int DEFAULT_SPEED_WARN_HIGH = 110;
+    public static final int DEFAULT_SPEED_WARN_LOW = 90;
 
     /** Firefox scrolls by default; the app itself (Loki) is added at runtime. */
     public static final String DEFAULT_SCROLL_PACKAGE_FIREFOX = "org.mozilla.firefox";
@@ -173,12 +176,13 @@ public final class SettingsRepository {
     }
 
     // ------------------------------------------------------------------
-    // Step stats bottom tab: Calendar / Rolling / Graph
+    // Step stats bottom tab: Calendar / Rolling / Graph / Speed
     // ------------------------------------------------------------------
 
     public static final int TAB_CALENDAR = 0;
     public static final int TAB_ROLLING = 1;
     public static final int TAB_GRAPH = 2;
+    public static final int TAB_SPEED = 3;
 
     /**
      * Selected bottom tab. Migrated from the old calendar/rolling boolean on
@@ -187,7 +191,7 @@ public final class SettingsRepository {
     public int getStepStatsTab() {
         if (this.sharedPreferences.contains(KEY_STEP_STATS_TAB)) {
             int tab = this.sharedPreferences.getInt(KEY_STEP_STATS_TAB, TAB_CALENDAR);
-            if (tab < TAB_CALENDAR || tab > TAB_GRAPH) {
+            if (tab < TAB_CALENDAR || tab > TAB_SPEED) {
                 return TAB_CALENDAR;
             }
             return tab;
@@ -196,7 +200,7 @@ public final class SettingsRepository {
     }
 
     public void setStepStatsTab(int tab) {
-        int safe = Math.max(TAB_CALENDAR, Math.min(tab, TAB_GRAPH));
+        int safe = Math.max(TAB_CALENDAR, Math.min(tab, TAB_SPEED));
         this.sharedPreferences.edit()
                 .putInt(KEY_STEP_STATS_TAB, safe)
                 .putBoolean(KEY_STEP_STATS_CALENDAR_MODE, safe == TAB_CALENDAR)
@@ -314,18 +318,20 @@ public final class SettingsRepository {
     // Speed warnings (steps per minute; 0 = off)
     // ------------------------------------------------------------------
 
-    /** Warn when the live speed stays above this value for 5 minutes. 0 = off. */
+    /** Warn when the live speed stays above this value for 5 minutes. */
     public int getSpeedWarnHigh() {
-        return clampSpeedWarn(this.sharedPreferences.getInt(KEY_SPEED_WARN_HIGH, 0));
+        return clampSpeedWarn(this.sharedPreferences.getInt(
+                KEY_SPEED_WARN_HIGH, DEFAULT_SPEED_WARN_HIGH));
     }
 
     public void setSpeedWarnHigh(int stepsPerMinute) {
         this.sharedPreferences.edit().putInt(KEY_SPEED_WARN_HIGH, clampSpeedWarn(stepsPerMinute)).apply();
     }
 
-    /** Warn when the live speed stays below this value for 5 minutes. 0 = off. */
+    /** Warn when the live speed stays below this value for 5 minutes. */
     public int getSpeedWarnLow() {
-        return clampSpeedWarn(this.sharedPreferences.getInt(KEY_SPEED_WARN_LOW, 0));
+        return clampSpeedWarn(this.sharedPreferences.getInt(
+                KEY_SPEED_WARN_LOW, DEFAULT_SPEED_WARN_LOW));
     }
 
     public void setSpeedWarnLow(int stepsPerMinute) {
@@ -333,7 +339,7 @@ public final class SettingsRepository {
     }
 
     private static int clampSpeedWarn(int value) {
-        return Math.max(0, Math.min(value, MAX_SPEED_WARN));
+        return Math.max(MIN_SPEED_WARN, Math.min(value, MAX_SPEED_WARN));
     }
 
     public void registerChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
