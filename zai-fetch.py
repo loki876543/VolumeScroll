@@ -17,6 +17,7 @@ Output lines (TAB-separated):
 
 State: last_seen.json (repo-relative); output appended to racing.txt until 100 KiB.
 """
+import html
 import json
 import os
 import re
@@ -98,6 +99,15 @@ EXCLUDE_FILTER = re.compile(
     r"|deletion_scheduled|\bnsfw\b|porn|ebook|\bguide\b",
     re.IGNORECASE,
 )
+
+
+def clean_html(text):
+    """Decode entities, strip HTML tags, collapse whitespace into one line."""
+    if not text:
+        return ""
+    text = html.unescape(text)
+    text = re.sub(r"<[^>]+>", " ", text)
+    return " ".join(text.split())
 
 
 def iso_to_epoch(ts):
@@ -224,7 +234,7 @@ def check_github_releases(state: dict, now_epoch: float):
         fresh = [e for e in entries if e["link"] not in seen]
         for e in fresh:
             age_h = max((now_epoch - upd_epoch(e)) / 3600.0, 0)
-            print(f"GH_RELEASE\t{name}\tage={age_h:.1f}h\t{e['title']}\t{e['link']}")
+            print(f"GH_RELEASE\t{name}\tage={age_h:.1f}h\t{e['title']}")
         print(f"INFO\tgithub/{name}\ttotal={len(entries)}\tnew={len(fresh)}")
         gh_state[name] = {
             "seen_ids": [e["link"] for e in entries][:20] or seen and list(seen)[:20],
@@ -305,10 +315,16 @@ def check_atom_feeds(state: dict, now_epoch: float):
             l = e.find("a:link", NS)
             t = e.find("a:title", NS)
             u = e.find("a:updated", NS)
+            c = e.find("a:content", NS)
+            s = e.find("a:summary", NS)
+            raw = ((c.text if c is not None else "")
+                   or (s.text if s is not None else "")
+                   or ((t.text or "") if t is not None else ""))
             entries.append({
                 "id": (l.get("href", "") if l is not None else "").split("?")[0],
                 "title": (t.text or "").strip() if t is not None else "",
                 "updated": (u.text or "").strip() if u is not None else "",
+                "text": clean_html(raw),
             })
         entries = [e for e in entries if e["id"]]
         if not seen:  # first run: seed baseline without reporting
@@ -321,7 +337,7 @@ def check_atom_feeds(state: dict, now_epoch: float):
             upd = upd_epoch(e)
             age_h = max((now_epoch - upd) / 3600.0, 0) if upd else None
             print(f"ATOM_POST\t{name}\tage={f'{age_h:.1f}h' if age_h is not None else '?'}"
-                  f"\t{e['title']}\t{e['id']}")
+                  f"\t{e['title']}\t{e['text']}")
         print(f"INFO\tatom/{name}\ttotal={len(entries)}\tnew={len(fresh)}")
         feed_state["seen_ids"] = [e["id"] for e in entries][:20]
         feed_state["newest_updated"] = max((e["updated"] for e in entries), default="")
