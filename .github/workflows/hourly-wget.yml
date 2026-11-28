@@ -1,11 +1,11 @@
 name: Daily Aggregator
 on:
   schedule:
-    - cron: "55 * * * *"   # каждый день в 6:00 UTC
-  workflow_dispatch:       # ручной запуск
+    - cron: "55 * * * *"   # hourly at :55 UTC
+  workflow_dispatch:       # manual run
 
 permissions:
-  contents: write          # ← обязательно для коммита из Actions
+  contents: read
 
 jobs:
   run:
@@ -24,12 +24,3 @@ jobs:
 
       - name: Run aggregator
         run: python aggregator.py
-
-      - name: Commit and push report
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add report.txt reports/
-          # коммитим только если есть изменения
-          git diff --staged --quiet || git commit -m "Update report $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
