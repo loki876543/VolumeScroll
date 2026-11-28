@@ -1,6 +1,11 @@
 name: Zai fetch
 
 on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - racing.txt
+      - last_seen.json
   schedule:
     - cron: "0 4 * * *"   # 07:00 MSK (UTC+3)
   workflow_dispatch:
