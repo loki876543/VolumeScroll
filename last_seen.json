@@ -59,6 +59,7 @@
   },
   "new_repos": {
     "seen": [
+      "github:rebelate/assetto-tuner",
       "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89586684",
       "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89578534",
       "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89573491",
@@ -109,14 +110,22 @@
       "github:lmu-osc/slides-core-didactic-principles-new-content"
     ]
   },
-  "checked_at": "2026-11-28 15:10",
-  "last_check_epoch": 1795878427.399847,
+  "checked_at": "2026-11-28 15:42",
+  "last_check_epoch": 1795880329.6600726,
   "subs": {
     "rfactor2": {
       "seen_ids": [],
       "newest_updated": ""
     },
     "simracing": {
+      "seen_ids": [],
+      "newest_updated": ""
+    },
+    "assettocorsa": {
+      "seen_ids": [],
+      "newest_updated": ""
+    },
+    "lemansultimate": {
       "seen_ids": [],
       "newest_updated": ""
     }
