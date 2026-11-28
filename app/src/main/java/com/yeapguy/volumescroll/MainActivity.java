@@ -16,9 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -446,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Rolling tab: for every period (week, month, 4 months, year, all) —
-     * the average steps per day, then "walked today" as before.
+     * the average steps per day.
      */
     private String buildRollingStats(StepStatsStore store) {
         NumberFormat numberFormat = NumberFormat.getIntegerInstance();
@@ -457,8 +455,6 @@ public class MainActivity extends AppCompatActivity {
         appendPeriodRow(b, getString(R.string.stat_last_4_months), store.getRollingPeriod(120), unit, numberFormat);
         appendPeriodRow(b, getString(R.string.stat_last_year), store.getRollingPeriod(365), unit, numberFormat);
         appendPeriodRow(b, getString(R.string.stat_all_time), store.getAllTimePeriod(), unit, numberFormat);
-        b.append(getString(R.string.stat_walk_today)).append(": ")
-                .append(StepStatsStore.formatDuration(store.getWalkTimeTodayMs()));
         return b.toString();
     }
 
@@ -486,43 +482,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Stats text followed by the small records line and the current speed in
-     * a large accent font. The large speed is the live walking speed; when
-     * idle, today's average is shown instead.
+     * Stats text followed by the small records line, including today's average speed.
      */
     private CharSequence buildSpeedText(StepStatsStore store, String statsText) {
         String unit = getString(R.string.stat_speed_unit);
         int bestToday = Math.round(store.getBestSpeedToday() * 60f);
         int record = Math.round(store.getBestSpeedAllTime() * 60f);
+        float avgToday = store.getAvgSpeedToday();
+        String avg = avgToday > 0f ? String.valueOf(Math.round(avgToday)) : "\u2014";
         String recordsLine = getString(R.string.stat_speed_best_today) + " "
                 + (bestToday > 0 ? String.valueOf(bestToday) : "\u2014")
                 + " \u00B7 " + getString(R.string.stat_speed_record) + " "
                 + (record > 0 ? String.valueOf(record) : "\u2014")
-                + " (" + unit + ")\n";
+                + " (" + unit + ") \u00B7 avg: " + avg + "\n";
 
-        float live = StepCounterService.getLiveStepsPerSecond();
-        float avgToday = store.getAvgSpeedToday();
-        String bigValue;
-        if (live > 0f) {
-            bigValue = String.valueOf(Math.round(live * 60f));
-        } else if (avgToday > 0f) {
-            bigValue = String.valueOf(Math.round(avgToday));
-        } else {
-            bigValue = "\u2014";
-        }
-        String bigLine = "\u2014".equals(bigValue) ? bigValue : bigValue + " " + unit;
-
-        String baseText = statsText + "\n" + recordsLine;
-        SpannableString rich = new SpannableString(baseText + bigLine);
-        int bigStart = baseText.length();
-        rich.setSpan(new RelativeSizeSpan(1.9f), bigStart, rich.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        rich.setSpan(new StyleSpan(Typeface.BOLD), bigStart, rich.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        rich.setSpan(new ForegroundColorSpan(MaterialColors.getColor(stepStatsText,
-                com.google.android.material.R.attr.colorPrimary)), bigStart, rich.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return rich;
+        return statsText + "\n" + recordsLine;
     }
 
     /**

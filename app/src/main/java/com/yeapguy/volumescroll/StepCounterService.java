@@ -125,6 +125,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     public void onCreate() {
         super.onCreate();
         this.store = new StepStatsStore(this);
+        this.store.importDailyLogIfEmpty();
         this.settingsRepository = new SettingsRepository(this);
         this.sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         createNotificationChannel();

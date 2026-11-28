@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FF141218"
+    android:background="?android:attr/colorBackground"
     android:orientation="vertical"
     android:paddingStart="14dp"
     android:paddingTop="12dp"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="#FFFFFFFF"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
         android:layout_marginTop="1dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="#CCFFFFFF"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="13sp" />
 
     <ProgressBar
@@ -37,8 +37,8 @@
         android:layout_marginTop="10dp"
         android:max="1000"
         android:progress="0"
-        android:progressBackgroundTint="#FF3A3543"
-        android:progressTint="#FFD0BCFF" />
+        android:progressBackgroundTint="?android:attr/colorControlNormal"
+        android:progressTint="?android:attr/colorAccent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,37 +55,37 @@
             android:background="#00000000"
             android:contentDescription="@string/player_btn_folder_prev"
             android:src="@android:drawable/ic_menu_revert"
-            android:tint="#FFFFFFFF" />
+            android:tint="?android:attr/colorControlNormal" />
 
         <ImageButton
-            android:id="@+id/notif_btn_prev"
+            android:id="@+id/notif_btn_rewind"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="#00000000"
-            android:contentDescription="@string/player_btn_prev"
-            android:src="@android:drawable/ic_media_previous"
-            android:tint="#FFFFFFFF" />
+            android:contentDescription="@string/player_btn_notify_rewind"
+            android:src="@android:drawable/ic_media_rew"
+            android:tint="?android:attr/colorControlNormal" />
 
         <ImageButton
-            android:id="@+id/notif_btn_play"
+            android:id="@+id/notif_btn_random"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="#00000000"
-            android:contentDescription="@string/player_btn_play"
-            android:src="@android:drawable/ic_media_play"
-            android:tint="#FFFFFFFF" />
+            android:contentDescription="@string/player_btn_random"
+            android:src="@android:drawable/ic_menu_shuffle"
+            android:tint="?android:attr/colorControlNormal" />
 
         <ImageButton
-            android:id="@+id/notif_btn_next"
+            android:id="@+id/notif_btn_forward"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
             android:background="#00000000"
-            android:contentDescription="@string/player_btn_next"
-            android:src="@android:drawable/ic_media_next"
-            android:tint="#FFFFFFFF" />
+            android:contentDescription="@string/player_btn_notify_forward"
+            android:src="@android:drawable/ic_media_ff"
+            android:tint="?android:attr/colorControlNormal" />
 
         <ImageButton
             android:id="@+id/notif_btn_folder_next"
@@ -95,6 +95,6 @@
             android:background="#00000000"
             android:contentDescription="@string/player_btn_folder_next"
             android:src="@android:drawable/ic_menu_more"
-            android:tint="#FFFFFFFF" />
+            android:tint="?android:attr/colorControlNormal" />
     </LinearLayout>
 </LinearLayout>

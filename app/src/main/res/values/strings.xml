@@ -31,7 +31,6 @@
     <string name="stat_last_4_months">Last 4 months</string>
     <string name="stat_last_year">Last year</string>
     <string name="stat_all_time">All time</string>
-    <string name="stat_walk_today">Walked today</string>
     <string name="stat_speed_best_today">Best today</string>
     <string name="stat_speed_record">Record</string>
     <string name="stat_speed_unit">s/min</string>
@@ -66,6 +65,9 @@
     <string name="player_btn_folder_prev">Folder−</string>
     <string name="player_btn_folder_next">Folder+</string>
     <string name="player_btn_rewind">−5 s</string>
+    <string name="player_btn_notify_rewind">Rewind</string>
+    <string name="player_btn_notify_forward">Forward</string>
+    <string name="player_btn_random">Random</string>
     <string name="player_btn_rewind_fmt">−%1$d s</string>
     <string name="player_btn_loop_on_fmt">−%1$d s ⟳</string>
     <string name="player_random">Random</string>

@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +40,7 @@ public final class StepStatsStore {
     private static final String KEY_SPEED_BEST_TODAY = "speed_best_today";
     private static final String KEY_WALK_TODAY_MS = "walk_today_ms";
     private static final String KEY_SWALLOWED_TODAY = "swallowed_today";
+    private static final String KEY_LOG_IMPORTED = "log_imported";
     private static final String KEY_MINUTES_PREFIX = "minutes_";
     private static final int MINUTES_PER_DAY = 24 * 60;
     /** The day's step counter only starts after this many steps (sensor blips don't count). */
@@ -131,6 +134,65 @@ public final class StepStatsStore {
         }
         this.prefs.edit().putLong(KEY_SWALLOWED_TODAY, swallowed).apply();
         return counted;
+    }
+
+    /**
+     * One-time recovery when the app data was lost: rebuild daily steps and
+     * walk time from the exported log (date,steps,speed s/min). The speed in
+     * the log is rounded, so reconstructed walk times are approximate.
+     */
+    public synchronized boolean importDailyLogIfEmpty() {
+        if (this.prefs.getBoolean(KEY_LOG_IMPORTED, false)) {
+            return false;
+        }
+        if (this.prefs.getLong(KEY_ALL_TIME, 0L) > 0L) {
+            this.prefs.edit().putBoolean(KEY_LOG_IMPORTED, true).apply();
+            return false;
+        }
+        File dir = this.appContext.getExternalFilesDir(null);
+        if (dir == null) {
+            return false;
+        }
+        File logFile = new File(dir, LOG_FILE_NAME);
+        if (!logFile.exists()) {
+            return false;
+        }
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SharedPreferences.Editor editor = this.prefs.edit();
+        long total = 0L;
+        try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.trim().split(",");
+                if (parts.length != 3) {
+                    continue;
+                }
+                try {
+                    java.util.Date day = fmt.parse(parts[0]);
+                    long steps = Long.parseLong(parts[1]);
+                    float speed = Float.parseFloat(parts[2]);
+                    if (day == null || steps <= 0L || !(speed > 0f)) {
+                        continue;
+                    }
+                    String key = fmt.format(day);
+                    editor.putLong(KEY_DAILY_PREFIX + key, steps);
+                    editor.putLong(KEY_DAILY_WALK_PREFIX + key,
+                            Math.round(steps * 60000L / speed));
+                    total += steps;
+                } catch (Exception ignored) {
+                    // Skip malformed lines.
+                }
+            }
+        } catch (IOException | SecurityException ignored) {
+            return false;
+        }
+        if (total <= 0L) {
+            return false;
+        }
+        editor.putLong(KEY_ALL_TIME, total);
+        editor.putBoolean(KEY_LOG_IMPORTED, true);
+        editor.apply();
+        return true;
     }
 
     public synchronized void addWalkTime(long millis) {

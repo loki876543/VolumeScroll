@@ -48,7 +48,7 @@ import java.util.concurrent.Executors;
  * scans when playback is first requested, then resumes the last folder,
  * track and position (persisted in SharedPreferences).
  *
- * Provides a media notification with rewind/prev/play/next/folder buttons,
+ * Provides a media notification with folder/rewind/random/forward buttons,
  * pauses when headphones are unplugged and resumes when they come back, and
  * ducks on transient audio-focus loss. The service keeps running while
  * paused — the notification is always ongoing and the service is sticky, so
@@ -69,6 +69,7 @@ public class FolderPlayerService extends Service {
     public static final String ACTION_NEXT_FOLDER = "com.yeapguy.volumescroll.player.NEXT_FOLDER";
     public static final String ACTION_PREV_FOLDER = "com.yeapguy.volumescroll.player.PREV_FOLDER";
     public static final String ACTION_REWIND_5S = "com.yeapguy.volumescroll.player.REWIND_5S";
+    public static final String ACTION_FORWARD = "com.yeapguy.volumescroll.player.FORWARD";
     public static final String ACTION_TOGGLE_LOOP_5S = "com.yeapguy.volumescroll.player.TOGGLE_LOOP_5S";
     public static final String ACTION_SEEK = "com.yeapguy.volumescroll.player.SEEK";
     public static final String ACTION_SEEK_TO = "com.yeapguy.volumescroll.player.SEEK_TO";
@@ -403,10 +404,14 @@ public class FolderPlayerService extends Service {
                 switchFolder(-1);
                 break;
             case ACTION_REWIND_5S:
-                // The -5s button: first press starts looping the previous 5
-                // seconds, second press stops the loop and plays on.
+                // Notification rewind: jump back by the current loop length.
+                rewind5s();
+                break;
             case ACTION_TOGGLE_LOOP_5S:
                 toggleLoop5s();
+                break;
+            case ACTION_FORWARD:
+                seekRelative(loopSeconds * 1000);
                 break;
             case ACTION_SEEK:
                 int ms = intent != null ? intent.getIntExtra(EXTRA_SEEK_MS, 0) : 0;
@@ -1143,13 +1148,11 @@ public class FolderPlayerService extends Service {
         }
         views.setOnClickPendingIntent(R.id.notif_btn_folder_prev,
                 commandIntent(ACTION_PREV_FOLDER, 0));
-        views.setOnClickPendingIntent(R.id.notif_btn_prev, commandIntent(ACTION_PREV, 2));
-        views.setOnClickPendingIntent(R.id.notif_btn_play, commandIntent(ACTION_TOGGLE, 3));
-        views.setOnClickPendingIntent(R.id.notif_btn_next, commandIntent(ACTION_NEXT, 4));
+        views.setOnClickPendingIntent(R.id.notif_btn_rewind, commandIntent(ACTION_REWIND_5S, 2));
+        views.setOnClickPendingIntent(R.id.notif_btn_random, commandIntent(ACTION_TOGGLE_RANDOM, 3));
+        views.setOnClickPendingIntent(R.id.notif_btn_forward, commandIntent(ACTION_FORWARD, 4));
         views.setOnClickPendingIntent(R.id.notif_btn_folder_next,
                 commandIntent(ACTION_NEXT_FOLDER, 5));
-        views.setImageViewResource(R.id.notif_btn_play,
-                snapshot.playing ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
 
         // Five slots: folder prev, track prev, play/pause, track next, folder next.
         // The -5s loop stays in-app (and on the MediaSession rewind action) —
