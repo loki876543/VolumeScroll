@@ -1,1 +1,124 @@
-{}
+{
+  "github_releases": {
+    "ac-to-rf2": {
+      "seen_ids": [
+        "https://github.com/Mewzapchu/ac-to-rf2/releases/tag/v1.0.0",
+        "https://github.com/Mewzapchu/ac-to-rf2/releases/tag/v1.0"
+      ],
+      "newest_updated": "2026-10-31T19:39:57Z"
+    }
+  },
+  "youtube": {
+    "NatterNet": {
+      "seen_ids": [
+        "mFYROYRrD40",
+        "tCV5sHbyZXo",
+        "SLLy-tkdX9o",
+        "CdvHau0nxxo",
+        "R5jsK1O0FZ8",
+        "vMY8oWDKL_U",
+        "DSk6ZcNMU1Q",
+        "p-wbdNvIOtg",
+        "-g1b0OhjzyI",
+        "9CadJRNR_EA",
+        "CF4rpdsEJoc",
+        "I6B3ufvXRTM",
+        "oNiuv6KZ2tM",
+        "AcKu37MzIdg",
+        "HYuglGgQmlo"
+      ],
+      "newest_published": "2026-11-25T05:38:46+00:00"
+    }
+  },
+  "atom": {
+    "snake-d-ha": {
+      "seen_ids": [
+        "https://snake-d-ha.livejournal.com/2047001.html",
+        "https://snake-d-ha.livejournal.com/2046892.html",
+        "https://snake-d-ha.livejournal.com/2046527.html",
+        "https://snake-d-ha.livejournal.com/2046274.html",
+        "https://snake-d-ha.livejournal.com/2045963.html",
+        "https://snake-d-ha.livejournal.com/2045923.html",
+        "https://snake-d-ha.livejournal.com/2045664.html",
+        "https://snake-d-ha.livejournal.com/2045066.html",
+        "https://snake-d-ha.livejournal.com/2044791.html",
+        "https://snake-d-ha.livejournal.com/2044647.html",
+        "https://snake-d-ha.livejournal.com/2044385.html",
+        "https://snake-d-ha.livejournal.com/2044033.html",
+        "https://snake-d-ha.livejournal.com/2043666.html",
+        "https://snake-d-ha.livejournal.com/2043608.html",
+        "https://snake-d-ha.livejournal.com/2043293.html",
+        "https://snake-d-ha.livejournal.com/2043001.html",
+        "https://snake-d-ha.livejournal.com/2042754.html",
+        "https://snake-d-ha.livejournal.com/2042488.html",
+        "https://snake-d-ha.livejournal.com/2042141.html",
+        "https://snake-d-ha.livejournal.com/2041896.html"
+      ],
+      "newest_updated": "2026-11-26T20:32:02Z"
+    }
+  },
+  "new_repos": {
+    "seen": [
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89586684",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89578534",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89573491",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89564254",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89551149",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89537318",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89519445",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89510790",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89497691",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89483200",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89473946",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89466278",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89451626",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89435760",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89426222",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89417747",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89405436",
+      "gitlab:rachel.green.r/ecoscan-9438945-deletion_scheduled-89388415",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89376392",
+      "gitlab:chandler.bing/ecoscan-9438945-deletion_scheduled-89367233",
+      "github:fatimamoreau06/assetto-corsa-trainer-mod-menu",
+      "github:brittany13761/assetto-corsa-evo-pc-mod-menu",
+      "github:aredarn/assettocorsa_ajka_mapgen",
+      "github:sauterdigital/assetto-corsa",
+      "github:thurstag/gitr",
+      "github:mr-lexus/accovelair",
+      "github:krstgp/s8-race-nadarzyn",
+      "github:ofabric-io/ac-mirror",
+      "github:fonsecajr/ace-headcam",
+      "github:jjsimlab/mitsubishi-evo-viii-acr",
+      "github:mateopenelas/stewart-motion-platform-sim-racing",
+      "github:fibot300885/jarvis-engenheiro-de-corrida",
+      "github:jcedwar61/ac-track-upgrader",
+      "github:jcedwar61/clarity-csp",
+      "github:luangrezende/simrig-mcp",
+      "github:rf2/vanity-sniper-vanity-dev",
+      "github:le-mans-ultimate-launcher-pc/.github",
+      "github:rkdehdgml/lmux",
+      "github:nhatxart/lmu-coach",
+      "github:progolosyi52/lp-lmuqovgv",
+      "github:wheeringa/lmu_telemetry",
+      "github:lmu-osc/slides-strategies-leadership",
+      "github:lmu-osc/slides-activation-methods",
+      "github:lmu-osc/slides-concept-planning",
+      "github:lmu-osc/slides-citation-politics",
+      "github:lmu-osc/slides-creating-learning-environment",
+      "github:lmu-osc/slides-leadership-skills-culture",
+      "github:lmu-osc/slides-core-didactic-principles-new-content"
+    ]
+  },
+  "checked_at": "2026-11-28 14:53",
+  "last_check_epoch": 1795877420.0751252,
+  "subs": {
+    "rfactor2": {
+      "seen_ids": [],
+      "newest_updated": ""
+    },
+    "simracing": {
+      "seen_ids": [],
+      "newest_updated": ""
+    }
+  }
+}

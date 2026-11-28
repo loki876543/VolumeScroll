@@ -1,0 +1,34 @@
+
+=== 2026-11-28T17:50:20+03:00 ===
+INFO	github/ac-to-rf2	total=2	new=0
+INFO	youtube/NatterNet	seeded=15
+INFO	atom/snake-d-ha	seeded=25
+NEW_REPO	github	AC	age=23.8h	rel=v80	Aredarn/AssettoCorsa_Ajka_MapGen	My hometown's AC Map and code	https://github.com/Aredarn/AssettoCorsa_Ajka_MapGen
+NEW_REPO	github	AC	age=1.9h	rel=-	sauterdigital/assetto-corsa	Assetto Corsa Fing	https://github.com/sauterdigital/assetto-corsa
+NEW_REPO	github	AC	age=26.1h	rel=-	Thurstag/gitr	Assetto Corsa app displaying the ghost in replays.	https://github.com/Thurstag/gitr
+NEW_REPO	github	AC	age=15.3h	rel=v0.3.0-beta.1	mr-lexus/ACCOvelair	Free customizable Windows HUD for Assetto Corsa Competizione.	https://github.com/mr-lexus/ACCOvelair
+NEW_REPO	github	AC	age=18.7h	rel=v1.0	krstgp/s8-race-nadarzyn	S8 Race (Nadarzyn) indoor karting track + Sodi RSX2 kart for Assetto Corsa (CSP)	https://github.com/krstgp/s8-race-nadarzyn
+NEW_REPO	github	AC	age=2.2h	rel=v1.4.1	ofabric-io/ac-mirror	An in-game Assetto Corsa spectator camera for VR drivers, powered by CSP and Direct3D 11.	https://github.com/ofabric-io/ac-mirror
+NEW_REPO	github	AC	age=20.5h	rel=v2.0	JJSimLab/Mitsubishi-Evo-VIII-ACR	Free JJ SimLab Mitsubishi Evolution VIII custom build for Assetto Corsa Rally. Installer downloads, installation notes a	https://github.com/JJSimLab/Mitsubishi-Evo-VIII-ACR
+NEW_REPO	github	AC	age=24.1h	rel=-	mateopenelas/stewart-motion-platform-sim-racing	6-DOF Stewart motion platform for sim racing: classical washout filter (Reid & Nahon) in Python with live Assetto Corsa 	https://github.com/mateopenelas/stewart-motion-platform-sim-racing
+NEW_REPO	github	AC	age=18.7h	rel=-	FIBOT300885/jarvis-engenheiro-de-corrida	Jarvis, engenheiro de corrida por voz para Automobilista 2 e Assetto Corsa: dicas de curva, setup e treino. Por @rodrigo	https://github.com/FIBOT300885/jarvis-engenheiro-de-corrida
+NEW_REPO	github	AC	age=24.7h	rel=v2.5	Jcedwar61/ac-track-upgrader	Windows app that modernises Assetto Corsa track graphics with Custom Shaders Patch configs, and keeps CSP, Pure and filt	https://github.com/Jcedwar61/ac-track-upgrader
+INFO	gh-search/AC	total=15	reported=10
+INFO	gh-search/rF2	total=0	reported=0
+INFO	gh-search/rF2	total=0	reported=0
+INFO	gh-search/rF2	total=1	reported=0
+NEW_REPO	github	LMU	age=1.4h	rel=-	Le-Mans-Ultimate-Launcher-PC/.github	Le Mans Ultimate Launcher keeps mod profiles, load order and save backups in one window. Detect the install, switch a se	https://github.com/Le-Mans-Ultimate-Launcher-PC/.github
+INFO	gh-search/LMU	total=1	reported=1
+NEW_REPO	github	LMU	age=23.8h	rel=-	WHeeringa/LMU_telemetry		https://github.com/WHeeringa/LMU_telemetry
+INFO	gh-search/LMU	total=11	reported=1
+INFO	gitlab/AC	total=20	reported=0
+INFO	gitlab/rF2	total=20	reported=0
+INFO	gitlab/LMU	total=20	reported=0
+FAILED	codeberg/AC	throttled or unavailable
+FAILED	codeberg/rF2	throttled or unavailable
+FAILED	codeberg/LMU	throttled or unavailable
+INFO	rfactor2	total_entries=0	fresh=0	matching=0
+FAILED	assettocorsa	last_http=302
+INFO	simracing	total_entries=0	fresh=0	matching=0
+FAILED	lemansultimate	last_http=302
+state updated
