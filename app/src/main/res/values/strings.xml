@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Loki</string>
+    <string name="label_dual_key_toggle">Use both volume buttons to switch random</string>
+    <string name="label_presses_per_page">Volume presses per screen</string>
+    <string name="label_app_filter">Only scroll in selected apps</string>
+    <string name="label_select_apps">Select apps</string>
+    <string name="dialog_select_apps_title">Choose apps for Loki</string>
+    <string name="action_actions">Actions</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_invert_selection">Invert selection</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_clear">Clear</string>
+    <string name="accessibility_service_label">Loki Scroll Service</string>
+    <string name="accessibility_service_description">Allows scrolling any app with volume keys.</string>
+    <string name="overlay_shortcut_enabled">Volume scrolling enabled</string>
+    <string name="overlay_shortcut_disabled">Volume scrolling disabled</string>
+    <string name="overlay_random_on">Random on</string>
+    <string name="overlay_random_off">Random off</string>
+    <string name="quick_tile_label">Loki</string>
+    <string name="quick_tile_state_on">On</string>
+    <string name="quick_tile_state_off">Off</string>
+
+    <!-- Steps -->
+    <string name="stat_mode_calendar">Calendar</string>
+    <string name="stat_mode_stats">Stats</string>
+    <string name="stat_mode_graph">Graph</string>
+    <string name="stat_last_7_days">Last 7 days</string>
+    <string name="stat_last_30_days">Last 30 days</string>
+    <string name="stat_last_4_months">Last 4 months</string>
+    <string name="stat_last_year">Last year</string>
+    <string name="stat_all_time">All time</string>
+    <string name="stat_walk_today">Walked today</string>
+    <string name="stat_speed_best_today">Best today</string>
+    <string name="stat_speed_record">Record</string>
+    <string name="stat_speed_unit">s/min</string>
+    <string name="minute_graph_title">Speed by minute, today (s/min)</string>
+    <string name="minute_graph_now_prefix">Now</string>
+    <string name="speed_graph_title">Speed (s/min), this day and last year</string>
+    <string name="speed_graph_today_prefix">Today</string>
+    <string name="label_speed_warn_high">Sound warning: speed above (s/min)</string>
+    <string name="label_speed_warn_low">Sound warning: speed below (s/min)</string>
+    <string name="speed_warn_off">Off</string>
+    <string name="calendar_prev_arrow">‹</string>
+    <string name="calendar_next_arrow">›</string>
+    <string name="calendar_prev_month">Previous month</string>
+    <string name="calendar_next_month">Next month</string>
+    <string name="notif_channel_steps">Step counter</string>
+    <string name="notif_label_steps">steps today</string>
+    <string name="notif_label_walking">walking</string>
+    <string name="notif_label_walk_today">walked today</string>
+
+    <!-- Folder player -->
+    <string name="player_status_idle">Tap Play to start</string>
+    <string name="player_status_scanning">Scanning music…</string>
+    <string name="player_status_saved_position">saved position · Play resumes here</string>
+    <string name="player_status_no_music">No music found in Music folders</string>
+    <string name="player_status_no_music_in_folder">No music found in the selected folder</string>
+    <string name="player_status_permission">Storage permission is needed to read music files</string>
+    <string name="player_file_error">Could not read the music files</string>
+    <string name="player_btn_play">Play</string>
+    <string name="player_btn_pause">Pause</string>
+    <string name="player_btn_prev">Prev</string>
+    <string name="player_btn_next">Next</string>
+    <string name="player_btn_folder_prev">Folder−</string>
+    <string name="player_btn_folder_next">Folder+</string>
+    <string name="player_btn_rewind">−5 s</string>
+    <string name="player_btn_rewind_fmt">−%1$d s</string>
+    <string name="player_btn_loop_on_fmt">−%1$d s ⟳</string>
+    <string name="player_random">Random</string>
+    <string name="player_btn_files">Select</string>
+    <string name="notif_channel_player">Music player</string>
+    <string name="status_accessibility_on">Accessibility: on</string>
+    <string name="status_accessibility_off">Accessibility: off</string>
+</resources>
