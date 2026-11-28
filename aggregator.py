@@ -295,12 +295,4 @@ if __name__ == "__main__":
     with open("report.txt", "w", encoding="utf-8") as f:
         f.write(report)
 
-    # (опционально) архив с датой и временем
-    import os
-    from datetime import datetime, timezone
-    os.makedirs("reports", exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M")
-    with open(f"reports/{stamp}.txt", "w", encoding="utf-8") as f:
-        f.write(report)
-
-    print(f"\n✅ Сохранено в report.txt и reports/{stamp}.txt")    
+    print(f"\n✅ Сохранено в report.txt")
